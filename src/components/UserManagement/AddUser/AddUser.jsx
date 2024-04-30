@@ -1,4 +1,5 @@
 import { supabase, useMyContext } from "@/Supabase/MyContext"
+import LogIn from "@/components/Profile/LogIn"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 
@@ -28,9 +29,8 @@ function AddUser() {
         .from('departments')
         .insert({ user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name })
         .select()
-      setError(error)
-      // if (error) return setError(error)
-      // navigate('/allusers')
+      if (error) return setError(error)
+      navigate('/allusers')
     } catch (error) {
       setError(error)
     } finally {
@@ -39,51 +39,53 @@ function AddUser() {
   }
 
   return (
-    <div className="w-1/3 bg-slate-500 p-4 mx-auto my-6 shadow-2xl rounded ">
+    <div className="flex gap-4">
 
-      <h3 className="font-bold text-2xl text-center my-3">Add User</h3>
-      <form onSubmit={handleAdd} >
-        <div className="flex justify-between items-center my-2">
-          <label htmlFor="user_name">User Name</label>
-          <input value={user_name} onChange={(e) => setUser_name(e.target.value)} type="text" id="user_name" name="user_name" placeholder="User Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
-        </div>
+      <div className="w-1/3 bg-slate-500 p-4 mx-auto my-6 shadow-2xl rounded ">
+        <h3 className="font-bold text-2xl text-center my-3">Add User</h3>
+        <form onSubmit={handleAdd} >
+          <div className="flex justify-between items-center my-2">
+            <label htmlFor="user_name">User Name</label>
+            <input value={user_name} onChange={(e) => setUser_name(e.target.value)} type="text" id="user_name" name="user_name" placeholder="User Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
+          </div>
 
-        <div className="flex justify-between items-center my-2">
-          <label htmlFor="first_name">First Name</label>
-          <input value={first_name} onChange={(e) => setFirst_name(e.target.value)} type="text" id="first_name" name="first_name" placeholder="First  Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
-        </div>
+          <div className="flex justify-between items-center my-2">
+            <label htmlFor="first_name">First Name</label>
+            <input value={first_name} onChange={(e) => setFirst_name(e.target.value)} type="text" id="first_name" name="first_name" placeholder="First  Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
+          </div>
 
-        <div className="flex justify-between items-center my-2">
-          <label htmlFor="middle_name">Middle Name</label>
-          <input value={middle_name} onChange={(e) => setMiddle_name(e.target.value)} type="text" id="middle_name" name="middle_name" placeholder="middle_name Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
-        </div>
+          <div className="flex justify-between items-center my-2">
+            <label htmlFor="middle_name">Middle Name</label>
+            <input value={middle_name} onChange={(e) => setMiddle_name(e.target.value)} type="text" id="middle_name" name="middle_name" placeholder="middle_name Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
+          </div>
 
-        <div className="flex justify-between items-center my-2">
-          <label htmlFor="last_name">Last Name</label>
-          <input value={last_name} onChange={(e) => setLast_name(e.target.value)} type="text" id="last_name" name="last_name" placeholder="last_name Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
-        </div>
+          <div className="flex justify-between items-center my-2">
+            <label htmlFor="last_name">Last Name</label>
+            <input value={last_name} onChange={(e) => setLast_name(e.target.value)} type="text" id="last_name" name="last_name" placeholder="last_name Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
+          </div>
 
-        <div className="flex justify-between items-center my-2">
-          <label htmlFor="job_title">Job Title</label>
-          <input value={job_title} onChange={(e) => setJob_title(e.target.value)} type="text" id="job_title" name="job_title" placeholder="job_title Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
-        </div>
+          <div className="flex justify-between items-center my-2">
+            <label htmlFor="job_title">Job Title</label>
+            <input value={job_title} onChange={(e) => setJob_title(e.target.value)} type="text" id="job_title" name="job_title" placeholder="job_title Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
+          </div>
 
-        <div className="flex justify-between items-center my-2">
-          <label htmlFor="org_type">Org Type</label>
-          <input value={org_type} onChange={(e) => setOrg_type(e.target.value)} type="text" id="org_type" name="org_type" placeholder="org_type Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
-        </div>
-        <div className="flex justify-between items-center my-2">
-          <label htmlFor="org_id">Org Id</label>
-          <input value={org_id} onChange={(e) => setOrg_id(e.target.value)} type="number" id="org_id" name="org_id" placeholder="org_id Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
-        </div>
-        <div className="flex justify-between items-center my-2">
-          <label htmlFor="org_id_column_name">Org Id Column Name</label>
-          <input value={org_id_column_name} onChange={(e) => setOrg_id_column_name(e.target.value)} type="text" id="org_id_column_name" name="org_id_column_name" placeholder="org_id_column_name Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
-        </div>
-        <button type="submit" className="bg-emerald-500 px-6 py-2 my-4 rounded text-white font-bold">Add</button>
-        <span>{error}</span>
-        <span>{error.message}</span>
-      </form>
+          <div className="flex justify-between items-center my-2">
+            <label htmlFor="org_type">Org Type</label>
+            <input value={org_type} onChange={(e) => setOrg_type(e.target.value)} type="text" id="org_type" name="org_type" placeholder="org_type Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
+          </div>
+          <div className="flex justify-between items-center my-2">
+            <label htmlFor="org_id">Org Id</label>
+            <input value={org_id} onChange={(e) => setOrg_id(e.target.value)} type="number" id="org_id" name="org_id" placeholder="org_id Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
+          </div>
+          <div className="flex justify-between items-center my-2">
+            <label htmlFor="org_id_column_name">Org Id Column Name</label>
+            <input value={org_id_column_name} onChange={(e) => setOrg_id_column_name(e.target.value)} type="text" id="org_id_column_name" name="org_id_column_name" placeholder="org_id_column_name Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-slate-100" />
+          </div>
+          <button type="submit" className="bg-emerald-500 px-6 py-2 my-4 rounded text-white font-bold">Add</button>
+          <span>{error}</span>
+          <span>{error.message}</span>
+        </form>
+      </div>
     </div>
   )
 }

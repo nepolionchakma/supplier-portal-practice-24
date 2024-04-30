@@ -11,6 +11,8 @@ import AllUsers from "./components/UserManagement/AllUsers"
 import EditUser from "./components/UserManagement/EditUser/EditUser"
 import AddUser from "./components/UserManagement/AddUser/AddUser"
 import Error from "./components/Error/Error"
+import InviteUser from "./components/UserManagement/InviteUser/InviteUser"
+import LogIn from "./components/Profile/LogIn"
 
 function LayOut() {
   const router = createBrowserRouter([
@@ -37,12 +39,20 @@ function LayOut() {
           element: <EditUser />
         },
         {
+          path: '/inviteuser',
+          element: <InviteUser />
+        },
+        {
           path: '/items',
           element: <Items />
         },
         {
           path: '/profile',
           element: <Profile />
+        },
+        {
+          path: '/login',
+          element: <LogIn />
         },
         {
           path: '/notifications',
@@ -67,11 +77,7 @@ function LayOut() {
           ]
         },
       ]
-    },
-    {
-      path: '*',
-      element: <Error />
-    },
+    }
   ])
   return (
     <RouterProvider router={router} />
