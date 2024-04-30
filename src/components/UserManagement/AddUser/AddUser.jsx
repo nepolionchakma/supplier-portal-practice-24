@@ -29,8 +29,8 @@ function AddUser() {
         .insert({ user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name })
         .select()
       setError(error)
-      if (error) return setError(error)
-      navigate('/allusers')
+      // if (error) return setError(error)
+      // navigate('/allusers')
     } catch (error) {
       setError(error)
     } finally {
