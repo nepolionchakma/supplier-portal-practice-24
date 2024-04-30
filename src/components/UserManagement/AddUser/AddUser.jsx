@@ -28,6 +28,7 @@ function AddUser() {
         .from('departments')
         .insert({ user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name })
         .select()
+      setError(error)
       if (error) return setError(error)
       navigate('/allusers')
     } catch (error) {
