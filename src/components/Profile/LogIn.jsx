@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function LogIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loginError, setLoginError] = useState('')
   const navigate = useNavigate()
   const { signIn, error } = useMyContext();
   const handleLogIn = (e) => {
@@ -13,6 +14,8 @@ function LogIn() {
     signIn(email, password)
     // .then(navigate('/', { replace: true }))
   }
+  // console.log(error.message, 'error')
+  // console.log(loginError, 'error login')
   return (
     <div className="my-9">
       <div className="mx-auto w-1/4  bg-slate-400 p-6 rounded">
@@ -29,7 +32,9 @@ function LogIn() {
           <br />
           <button className="bg-emerald-500 px-6 py-2 my-4 text-white font-bold">LogIn</button>
           {
-            <p>{error}</p>
+            error &&
+            <div className="text-red-600 my-3"><p>Enter Valid email and password</p></div>
+
           }
         </form>
       </div>

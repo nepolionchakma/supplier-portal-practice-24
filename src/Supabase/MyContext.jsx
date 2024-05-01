@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import conf from "./conf";
 import { Children, createContext, useContext, useEffect, useState } from "react";
+import clsx from "clsx";
 // console.log(conf.supabase_url, conf.supabase_key)
 export const supabase = createClient(conf.supabase_url, conf.supabase_key);
 
@@ -13,6 +14,7 @@ export const MyContextProvider = ({ children }) => {
   const [error, setError] = useState(null)
   const [session, setSession] = useState(null)
 
+  console.log(data, 'context')
   // Authentication Section
   useEffect(() => {
     supabase.auth.getSession()
@@ -44,7 +46,7 @@ export const MyContextProvider = ({ children }) => {
       }
     }
     allUsers()
-  }, [data])
+  }, [])
 
   // create users
   const signUp = async (email, password, full_name) => {
@@ -73,10 +75,13 @@ export const MyContextProvider = ({ children }) => {
       const { data, error } = await supabase.auth.signInWithPassword({
         email, password
       })
-      if (data) setData(data)
-      if (error) setError(error)
+      if (error) return setError(error)
+      if (data) {
+        setData(data)
+        setError('')
+      }
     } catch (error) {
-      console.log(error)
+      setError(error)
     } finally {
       setIsLoading(false)
     }
