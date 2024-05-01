@@ -60,7 +60,6 @@ export const MyContextProvider = ({ children }) => {
           }
         }
       })
-      if (data) setData(data)
       if (error) setError(error)
     } catch (error) {
       throw error
@@ -77,7 +76,6 @@ export const MyContextProvider = ({ children }) => {
       })
       if (error) return setError(error)
       if (data) {
-        setData(data)
         setError('')
       }
     } catch (error) {
@@ -94,7 +92,7 @@ export const MyContextProvider = ({ children }) => {
         .eq('id', id)
       if (error) setError(error)
     } catch (error) {
-      setError(error)
+      console.log(error)
     } finally {
       setIsLoading(false)
     }
