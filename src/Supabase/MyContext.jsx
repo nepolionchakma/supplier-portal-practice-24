@@ -14,7 +14,7 @@ export const MyContextProvider = ({ children }) => {
   const [error, setError] = useState(null)
   const [session, setSession] = useState(null)
 
-  console.log(data, 'context')
+
   // Authentication Section
   useEffect(() => {
     supabase.auth.getSession()
@@ -60,7 +60,7 @@ export const MyContextProvider = ({ children }) => {
           }
         }
       })
-      if (data) console.log(data)
+      if (data) setData(data)
       if (error) setError(error)
     } catch (error) {
       throw error
@@ -94,7 +94,7 @@ export const MyContextProvider = ({ children }) => {
         .eq('id', id)
       if (error) setError(error)
     } catch (error) {
-      console.log(error)
+      setError(error)
     } finally {
       setIsLoading(false)
     }
