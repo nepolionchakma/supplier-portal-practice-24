@@ -46,7 +46,7 @@ export const MyContextProvider = ({ children }) => {
       }
     }
     allUsers()
-  }, [])
+  }, [data])
 
   // create users
   const signUp = async (email, password, full_name) => {

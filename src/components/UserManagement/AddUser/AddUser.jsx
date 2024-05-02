@@ -30,7 +30,10 @@ function AddUser() {
         .insert({ user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name })
         .select()
       if (error) return setError(error)
-      navigate('/allusers')
+      if(data){
+        navigate('/allusers')
+
+      }
     } catch (error) {
       setError(error)
     } finally {
