@@ -1,4 +1,4 @@
-import { useMyContext } from "@/Supabase/MyContext"
+import { useAuthContext } from "@/Supabase/AuthContext"
 import { Replace } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ function LogIn() {
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
   const navigate = useNavigate()
-  const { signIn, error } = useMyContext();
+  const { signIn, error } = useAuthContext();
   const handleLogIn = (e) => {
     e.preventDefault()
     signIn(email, password)

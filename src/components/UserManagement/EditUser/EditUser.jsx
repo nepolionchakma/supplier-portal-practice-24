@@ -1,4 +1,4 @@
-import { supabase, useMyContext } from "@/Supabase/MyContext"
+import { supabase, useAuthContext } from "@/Supabase/AuthContext"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 
@@ -15,13 +15,14 @@ function EditUser() {
   const [error, setError] = useState('')
   const [data, setData] = useState('')
   const { id } = useParams()
-  const { updateUserData } = useMyContext()
+  const { updateUserData } = useAuthContext()
   const navigate = useNavigate()
   // console.log(user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name)
+  // console.log(data)
   useEffect(() => {
     const getSingleData = async () => {
       const { data, error } = await supabase
-        .from('departments')
+        .from('def_persons')
         .select()
         .eq('id', id)
         .single()
@@ -47,7 +48,7 @@ function EditUser() {
     e.preventDefault()
     try {
       const { data, error } = await supabase
-        .from('departments')
+        .from('def_persons')
         .update({ user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name })
         .eq('id', id)
         .select()

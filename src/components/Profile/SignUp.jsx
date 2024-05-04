@@ -1,4 +1,4 @@
-import { useMyContext } from "@/Supabase/MyContext"
+import { useAuthContext } from "@/Supabase/AuthContext"
 import { useState } from "react";
 
 function SignUp() {
@@ -6,7 +6,7 @@ function SignUp() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const { signUp, error } = useMyContext();
+  const { signUp, error } = useAuthContext();
   const handleSignUp = (e) => {
     e.preventDefault()
     signUp(email, password, fullName)

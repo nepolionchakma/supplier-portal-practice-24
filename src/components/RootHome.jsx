@@ -1,10 +1,10 @@
-import { useMyContext } from "@/Supabase/MyContext"
+import { useAuthContext } from "@/Supabase/AuthContext"
 import LeftSideNav from "./Nav/LeftSideNav"
 import TopNav from "./Nav/TopNav"
 import LogIn from "./Profile/LogIn"
 
 function RootHome() {
-  const { session, isLoading } = useMyContext()
+  const { session, isLoading } = useAuthContext()
   if (isLoading) return (
     <div
       className='flex items-center justify-center'>

@@ -1,4 +1,4 @@
-import { useMyContext } from "@/Supabase/MyContext"
+import { useAuthContext } from "@/Supabase/AuthContext"
 import {
   Table,
   TableBody,
@@ -13,9 +13,21 @@ import { FilePenIcon, FilePenLineIcon } from "lucide-react";
 
 import { FiPenTool, FiTrash } from 'react-icons/fi';
 import { Link } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 
 function MyTable() {
-  const { data, isLoading, handleDelete } = useMyContext()
+  const { data, isLoading, handleDelete } = useAuthContext()
   const handleDeleteItem = (id) => {
     handleDelete(id)
   }
@@ -64,7 +76,26 @@ function MyTable() {
                     <TableCell>
                       <div className='flex items-center gap-2 cursor-pointer'>
                         <Link className="p-1 rounded-full border-2 bg-green-400 text-xl" to={'/allusers/edituser/' + i.id}>{<FilePenLineIcon />}</Link>
-                        <button className="p-1 rounded-full border-2 bg-red-400 text-xl" onClick={() => handleDeleteItem(i.id)}>{<FiTrash />}</button>
+
+
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button className="p-1 rounded-full border-2 bg-red-400 text-xl" >{<FiTrash />}</button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Really Want To <span className="text-red-600">Delete</span> ?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently <span className="text-red-600">delete</span> from
+                                database and <span className="text-red-600">remove</span> your data from our servers.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className='bg-green-700 text-white'>Cancel</AlertDialogCancel>
+                              <AlertDialogAction className='bg-red-600' onClick={() => handleDeleteItem(i.id)}>Confirm</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
 
                       </div></TableCell>
                   </TableRow>

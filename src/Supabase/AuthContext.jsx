@@ -5,12 +5,13 @@ import clsx from "clsx";
 // console.log(conf.supabase_url, conf.supabase_key)
 export const supabase = createClient(conf.supabase_url, conf.supabase_key);
 
-const MyCreateContext = createContext();
-export const useMyContext = () => useContext(MyCreateContext);
+const AuthCreateContext = createContext();
+export const useAuthContext = () => useContext(AuthCreateContext);
 
-export const MyContextProvider = ({ children }) => {
+export const AuthContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState(null)
+  const [useerData, setUsrData] = useState(null)
   const [error, setError] = useState(null)
   const [session, setSession] = useState(null)
 
@@ -34,8 +35,8 @@ export const MyContextProvider = ({ children }) => {
     const allUsers = async () => {
       try {
         const { data, error } = await supabase
-          .from('departments')
-          .select()
+          .from('def_persons')
+          .select('*')
         if (error) setError(error)
         if (data) setData(data)
         setIsLoading(false)
@@ -68,6 +69,24 @@ export const MyContextProvider = ({ children }) => {
     }
 
   }
+  // Create a user
+  const createUser = async (email, password, user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name, org_id_table_name, domain_name) => {
+
+
+    const { data, error } = await supabase.auth.signUp(
+      {
+        email,
+        password,
+        options: {
+          data: {
+            email, password, user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name, org_id_table_name, domain_name
+          }
+        }
+      }
+    )
+    console.log(data)
+    console.log(error)
+  }
   // signIn Function & invok it
   const signIn = async (email, password) => {
     try {
@@ -87,7 +106,7 @@ export const MyContextProvider = ({ children }) => {
   const handleDelete = async (id) => {
     try {
       const { error } = await supabase
-        .from('departments')
+        .from('def_persons')
         .delete()
         .eq('id', id)
       if (error) setError(error)
@@ -106,11 +125,11 @@ export const MyContextProvider = ({ children }) => {
 
 
   const value = {
-    signIn, signUp, data, isLoading, error, session, updateUserData, handleDelete
+    signIn, signUp, createUser, data, isLoading, error, session, updateUserData, handleDelete,
   }
   return (
-    <MyCreateContext.Provider value={value}>
+    <AuthCreateContext.Provider value={value}>
       {children}
-    </MyCreateContext.Provider>
+    </AuthCreateContext.Provider>
   )
 };
