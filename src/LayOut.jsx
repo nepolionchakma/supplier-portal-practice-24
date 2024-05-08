@@ -10,9 +10,20 @@ import Profile from "./components/Profile/Profile"
 import AllUsers from "./components/UserManagement/AllUsers"
 import EditUser from "./components/UserManagement/EditUser/EditUser"
 import AddUser from "./components/UserManagement/AddUser/AddUser"
+import Employees from "./components/Employees/Employees"
 import Error from "./components/Error/Error"
 import InviteUser from "./components/UserManagement/InviteUser/InviteUser"
 import LogIn from "./components/Profile/LogIn"
+import ConfirmAccount from "./components/ConfirmAccount/ConfirmAccount"
+import Update from "./components/Employees/Update/Update"
+import AddRow from "./components/Employees/AddRow/AddRow"
+import AccessToken from "./components/QRCode/AccessToken"
+import OrgId from "./components/QRCode/OrgId"
+import AllDepartment from "./components/Departments/AllDepartment"
+import AddDepartment from "./components/Departments/AddDepartment"
+import UpdateDepartment from "./components/Departments/UpdateDepartment"
+import Bell from "./components/Bell/Bell"
+import SignUp from "./components/Profile/SignUp"
 
 function LayOut() {
   const router = createBrowserRouter([
@@ -47,7 +58,47 @@ function LayOut() {
           element: <Items />
         },
         {
+          path: '/bell',
+          element: <Bell />
+        },
+        {
+          path: '/employees',
+          element: <Employees />
+        },
+        {
+          path: '/adddata',
+          element: <AddRow />
+        },
+        {
+          path: '/employees/edit/:user_id',
+          element: <Update />
+        },
+        {
+          path: '/alldepartment',
+          element: <AllDepartment />
+        },
+        {
+          path: '/adddepartment',
+          element: <AddDepartment />
+        },
+        {
+          path: '/alldepartment/edit/:id',
+          element: <UpdateDepartment />
+        },
+        {
+          path: '/orgid',
+          element: <OrgId />
+        },
+        {
+          path: '/accesstoken',
+          element: <AccessToken />
+        },
+        {
           path: '/profile',
+          element: <Profile />
+        },
+        {
+          path: '/profile/update/:id',
           element: <Profile />
         },
         {
@@ -77,7 +128,15 @@ function LayOut() {
           ]
         },
       ]
-    }
+    },
+    {
+      path: '/confirmaccount',
+      element: <ConfirmAccount />,
+    },
+    {
+      path: '/accountconfirm',
+      element: <SignUp />,
+    },
   ])
   return (
     <RouterProvider router={router} />

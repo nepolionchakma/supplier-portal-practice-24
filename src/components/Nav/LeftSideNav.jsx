@@ -2,7 +2,7 @@ import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import Logo from '../../../images/Supplier-Portal.jpg'
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useState } from 'react';
-import { FiCrosshair, FiList, FiMenu, FiSend, FiUser, FiUserPlus, FiUsers, FiX } from 'react-icons/fi';
+import { FiCode, FiCrosshair, FiDatabase, FiDivideCircle, FiFile, FiHardDrive, FiInfo, FiList, FiMenu, FiPlus, FiSend, FiServer, FiUser, FiUserPlus, FiUsers, FiX } from 'react-icons/fi';
 function LeftSideNav() {
   const [collapsed, setCollapsed] = useState(false);
   return (
@@ -50,9 +50,37 @@ function LeftSideNav() {
                 <MenuItem component={<NavLink to="/inviteuser" />}
                   icon={<FiSend className='text-2xl' />}> Invite a User </MenuItem>
               </SubMenu>
+
+              <SubMenu label="Employees" icon={<FiDatabase className='text-2xl' />}>
+                <MenuItem
+                  component={<NavLink to="/adddata" />}
+                  icon={<FiPlus className='text-2xl' />}> Add</MenuItem>
+                <MenuItem
+                  component={<NavLink to="employees" />}
+                  icon={<FiFile className='text-2xl' />}>All Data</MenuItem>
+              </SubMenu>
+              <SubMenu label="Departments" icon={<FiHardDrive className='text-2xl' />}>
+                <MenuItem
+                  component={<NavLink to="/adddepartment" />}
+                  icon={<FiPlus className='text-2xl' />}> Add Department</MenuItem>
+                <MenuItem
+                  component={<NavLink to="alldepartment" />}
+                  icon={<FiFile className='text-2xl' />}>All Department</MenuItem>
+              </SubMenu>
+
+              <SubMenu label="QR Code" icon={<FiCode className='text-2xl' />}>
+                <MenuItem
+                  component={<NavLink to="/orgid" />}
+                  icon={<FiInfo className='text-2xl' />}> Org Id </MenuItem>
+                <MenuItem
+                  component={<NavLink to="accesstoken" />}
+                  icon={<FiServer className='text-2xl' />}>Access Token</MenuItem>
+              </SubMenu>
+
               <MenuItem
                 component={<NavLink to="items" />}
                 icon={<FiList className='text-2xl' />}> Items </MenuItem>
+
               <MenuItem
                 component={<NavLink to="profile" />}
                 icon={<FiUser className='text-2xl' />}> Profiles </MenuItem>

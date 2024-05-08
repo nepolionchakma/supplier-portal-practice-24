@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { Bounce, ToastContainer, toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 
-function EditUser() {
+function Update() {
   const [user_name, setUser_name] = useState('')
   const [first_name, setFirst_name] = useState('')
   const [middle_name, setMiddle_name] = useState('')
@@ -16,44 +16,20 @@ function EditUser() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [data, setData] = useState('')
-  const { id } = useParams()
+  const { user_id } = useParams()
   const { updateUserData, tosifySuccess, tosifyError } = useAuthContext()
   const navigate = useNavigate()
   // console.log(user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name)
-  // console.log(data)
-  // tosify
-  // const tosifySuccess = () => toast.success('Success', {
-  //   position: "bottom-right",
-  //   autoClose: 2000,
-  //   hideProgressBar: false,
-  //   closeOnClick: true,
-  //   pauseOnHover: true,
-  //   draggable: true,
-  //   progress: undefined,
-  //   theme: "light",
-  //   transition: Bounce,
-  // });
-  // const tosifyError = () => toast.error({ messageInfo }, {
-  //   position: "bottom-right",
-  //   autoClose: 12000,
-  //   hideProgressBar: false,
-  //   closeOnClick: true,
-  //   pauseOnHover: true,
-  //   draggable: true,
-  //   progress: undefined,
-  //   theme: "light",
-  //   transition: Bounce,
-  // });
-
+  // console.log(user_id)
   useEffect(() => {
     const getSingleData = async () => {
       const { data, error } = await supabase
-        .from('def_persons')
+        .from('employees')
         .select()
-        .eq('id', id)
+        .eq('user_id', user_id)
         .single()
       if (error) {
-        navigate('/')
+        // navigate('/')
       }
       if (data) {
         setData(data)
@@ -68,17 +44,17 @@ function EditUser() {
       }
     }
     getSingleData()
-  }, [id])
+  }, [user_id])
 
   const handleUpdate = async (e) => {
     e.preventDefault()
     try {
       const { data, error } = await supabase
-        .from('def_persons')
+        .from('employees')
         .update({ user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name })
-        .eq('id', id)
+        .eq('user_id', user_id)
         .select()
-      if (data) tosifySuccess('Update User Successfully.')
+      if (data) tosifySuccess('Update Table Successfully.')
       if (error) tosifyError('Error ! Filled all correctly Please.')
       // if (data) navigate('/allusers')
     } catch (error) {
@@ -139,4 +115,4 @@ function EditUser() {
     </div>
   )
 }
-export default EditUser
+export default Update

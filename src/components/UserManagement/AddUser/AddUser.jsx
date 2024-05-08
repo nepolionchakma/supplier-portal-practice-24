@@ -32,7 +32,7 @@ function AddUser() {
     if (password != conf_password) return alert('Password MisMatch')
     try {
       createUser(email, password, user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name, org_id_table_name, domain_name)
-      navigate('/allusers')
+      // navigate('/allusers')
 
     } catch (error) {
       setError(error)

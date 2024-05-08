@@ -10,12 +10,12 @@ function TopNav() {
       <nav>
         <div className="flex gap-8 text-2xl p-4 items-center mr-10">
           <NavLink to='/'><FiHome /></NavLink>
-          <NavLink to='/'><FiBell /></NavLink>
-          <NavLink to='/'><FiList /></NavLink>
+          <NavLink to='/bell'><FiBell /></NavLink>
+          <NavLink to='/items'><FiList /></NavLink>
           <NavLink to='/notifications'><FiMessageSquare /></NavLink>
-          <NavLink to='/'><FiGithub /></NavLink>
+          <NavLink to='/profile'><FiGithub /></NavLink>
           {
-            session ? <Link onClick={() => supabase.auth.signOut()}>LogOut</Link> : <Link to='login'>LogIn</Link>
+            session && <Link onClick={() => supabase.auth.signOut()}>LogOut</Link>
           }
         </div>
       </nav>
