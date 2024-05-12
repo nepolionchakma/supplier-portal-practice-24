@@ -189,7 +189,7 @@ export const AuthContextProvider = ({ children }) => {
         await supabase
           .from('employees')
           .delete()
-          .eq('user_id', id)
+          .eq('employee_id', id)
       }
       if (info == 'departments') {
         await supabase
@@ -210,16 +210,17 @@ export const AuthContextProvider = ({ children }) => {
       .update({ user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name })
       .eq('user_id', id)
   }
-  const addDataEmployeesTable = async (user_name, first_name, middle_name, last_name, job_title, email, org_type, org_id, org_id_column_name) => {
+  const addDataEmployeesTable = async (employee_id, employee_name, first_name, last_name, job_title, email, department_id) => {
 
     const { data, error } = await supabase
       .from('employees')
       .insert([
-        { user_name, first_name, middle_name, last_name, job_title, email, org_type, org_id, org_id_column_name }
+        { employee_id, employee_name, first_name, last_name, job_title, email, department_id }
       ])
       .select()
 
     console.log(data)
+    console.log(error)
     if (data) tosifySuccess('Add Data Successfully.')
     if (error) tosifyError('Error ! Filled all correctly Please.')
   }

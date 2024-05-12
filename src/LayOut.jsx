@@ -24,6 +24,8 @@ import AddDepartment from "./components/Departments/AddDepartment"
 import UpdateDepartment from "./components/Departments/UpdateDepartment"
 import Bell from "./components/Bell/Bell"
 import SignUp from "./components/Profile/SignUp"
+import MasterDetails1 from "./components/MasterDetails/MasterDetails1"
+import MasterDetails2 from "./components/MasterDetails/MasterDetails2"
 
 function LayOut() {
   const router = createBrowserRouter([
@@ -70,7 +72,7 @@ function LayOut() {
           element: <AddRow />
         },
         {
-          path: '/employees/edit/:user_id',
+          path: '/employees/edit/:employee_id',
           element: <Update />
         },
         {
@@ -80,6 +82,14 @@ function LayOut() {
         {
           path: '/adddepartment',
           element: <AddDepartment />
+        },
+        {
+          path: '/masterdetails1',
+          element: <MasterDetails1 />
+        },
+        {
+          path: '/masterdetails2',
+          element: <MasterDetails2 />
         },
         {
           path: '/alldepartment/edit/:id',
@@ -101,6 +111,7 @@ function LayOut() {
           path: '/profile/update/:id',
           element: <Profile />
         },
+
         {
           path: '/login',
           element: <LogIn />

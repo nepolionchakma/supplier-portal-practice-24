@@ -29,10 +29,10 @@ function UserTable({ part, data, isLoading, handleDelete, tosifySuccess }) {
     handleDelete(id, info)
     tosifySuccess('Delete Successfully !')
   }
-  const sortingDataUserID = data?.sort((a, b) => b.user_id - a.user_id)
+  const sortingDataUserID = data?.sort((a, b) => a.user_id - b.user_id)
   return (
     <>
-      <div className="border bg-green-100">
+      <div className="border ">
         <h3 className="font-bold text-2xl text-center my-3">{part == 'ReadAll' ? 'Employees' : 'Users'} Table</h3>
         {
           isLoading ?
@@ -45,40 +45,28 @@ function UserTable({ part, data, isLoading, handleDelete, tosifySuccess }) {
               <TableHeader>
 
                 <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>UserID</TableHead>
-                  {/* <TableHead className="w-[10px]">Email</TableHead> */}
-                  {/* <TableHead>User Id</TableHead> */}
-                  <TableHead>User Name</TableHead>
+                  <TableHead>{part == 'AllUsers' ? 'User Id' : 'Employee Id'}</TableHead>
                   <TableHead>First Name</TableHead>
-                  <TableHead>Middle Name</TableHead>
+                  {/* <TableHead>Middle Name</TableHead> */}
                   <TableHead>Last Name</TableHead>
                   <TableHead>Job Title</TableHead>
-                  <TableHead>Organization Type</TableHead>
+                  {/*<TableHead>Organization Type</TableHead>
                   <TableHead>Organization Id</TableHead>
-                  <TableHead>Organization ID Column Name</TableHead>
+                  <TableHead>Organization ID Column Name</TableHead> */}
                   <TableHead>Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {sortingDataUserID?.map((i) => (
-                  <TableRow key={i.user_id}>
-                    <TableCell>{i.id}</TableCell>
-                    <TableCell>{i.user_id}</TableCell>
-                    {/* <TableCell className="w-[10px]">{i.email}</TableCell> */}
-                    {/* <TableCell >{i.user_id}</TableCell> */}
-                    <TableCell >{i.user_name}</TableCell>
+                  <TableRow key={part == 'AllUsers' ? i.user_id : i.employee_id}>
+                    <TableCell>{part == 'AllUsers' ? i.user_id : i.employee_id}</TableCell>
                     <TableCell >{i.first_name}</TableCell>
-                    <TableCell >{i.middle_name}</TableCell>
                     <TableCell >{i.last_name}</TableCell>
                     <TableCell >{i.job_title}</TableCell>
-                    <TableCell >{i.org_type}</TableCell>
-                    <TableCell >{i.org_id}</TableCell>
-                    <TableCell >{i.org_id_column_name}</TableCell>
                     <TableCell>
                       <div className='flex items-center gap-2 cursor-pointer'>
                         {
-                          part == 'ReadAll' && <Link className="p-1 rounded-full border-2 bg-green-400 text-xl" to={'/employees/edit/' + i.user_id}>{<FilePenLineIcon />}</Link>
+                          part == 'ReadAll' && <Link className="p-1 rounded-full border-2 bg-green-400 text-xl" to={'/employees/edit/' + i.employee_id}>{<FilePenLineIcon />}</Link>
                         }
                         {
                           part == 'AllUsers' && <Link className="p-1 rounded-full border-2 bg-green-400 text-xl" to={'/allusers/edituser/' + i.id}>{<FilePenLineIcon />}</Link>
@@ -100,7 +88,7 @@ function UserTable({ part, data, isLoading, handleDelete, tosifySuccess }) {
                               <AlertDialogCancel className='bg-green-700 text-white'>Cancel</AlertDialogCancel>
                               {
                                 part == 'ReadAll' ?
-                                  <AlertDialogAction className='bg-red-600' onClick={() => handleDeleteItem(i.user_id, 'employess')}>Confirm</AlertDialogAction>
+                                  <AlertDialogAction className='bg-red-600' onClick={() => handleDeleteItem(i.employee_id, 'employees')}>Confirm</AlertDialogAction>
                                   :
                                   <AlertDialogAction className='bg-red-600' onClick={() => handleDeleteItem(i.id, 'def_persons')}>Confirm</AlertDialogAction>
                               }
