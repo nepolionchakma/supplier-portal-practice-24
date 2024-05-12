@@ -534,7 +534,7 @@ function MasterDetails2() {
                         <span onClick={() => handleClickCheckedEmployee(i.employee_id)} className="p-2 w-[15%] cursor-pointer">{i.last_name}</span>
                     }
                   </TableCell>
-                  <TableCell className='p-0 m-0 w-[20%] '>
+                  <TableCell className='p-0 m-0 w-[17%] '>
                     {
                       isEditableEmployeeId == i.employee_id ? <input value={isLoading ? 'loading' : email} onChange={(e) => setEmail(e.target.value)} type="email" id="email" name="email" placeholder="email" className="p-2 rounded  focus:text-orange-600 bg-slate-100 w-[95%] " />
                         :
@@ -566,7 +566,7 @@ function MasterDetails2() {
                     }
                   </TableCell>
                   <TableCell>
-                    <div className='flex items-center w-[15%]'>
+                    <div className='flex items-center w-[18%]'>
                       {
                         actionButton == i.employee_id ? <>
                           {
@@ -574,10 +574,10 @@ function MasterDetails2() {
                               ? <div className="flex">
 
                                 {
-                                  employee_name != i.employee_name || job_title != i.job_title || first_name != i.first_name || last_name != i.last_name || email != i.email &&
-                                  <button onClick={handleUpdateEmployee} className="p-1 rounded-full border-2 bg-green-400 text-xl cursor-pointer" >
-                                    <FiSave />
-                                  </button>
+                                  employee_name != i.employee_name || job_title != i.job_title || first_name != i.first_name || last_name != i.last_name || email != i.email ?
+                                    <button onClick={handleUpdateEmployee} className="p-1 rounded-full border-2 bg-green-400 text-xl cursor-pointer" >
+                                      <FiSave />
+                                    </button> : <></>
                                 }
                                 <button onClick={() => editEmployee(false)} className="p-1 rounded-full border-2 bg-green-400 text-xl cursor-pointer" >
                                   <FiX />
