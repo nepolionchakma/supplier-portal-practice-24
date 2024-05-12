@@ -94,7 +94,7 @@ function LeftSideNav() {
   ]
   // console.log(nav)
   return (
-    <div className="p-4 h-auto  ">
+    <div className="p-4 ">
       <nav className='flex gap-4'>
         <div style={{ display: 'flex', height: '100%', minHeight: '400px' }}  >
 

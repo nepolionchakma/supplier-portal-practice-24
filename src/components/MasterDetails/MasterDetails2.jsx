@@ -40,7 +40,6 @@ function MasterDetails2() {
   const [isEditableDepartmentId, setIsEditableDepartmentId] = useState('')
   const [isEditableEmployeeId, setIsEditableEmployeeId] = useState('')
   const [department_id, setDepartment_id] = useState('')
-  const [showDepartment_name, setShowDepartment_name] = useState('')
   const [employee_id, setEmployee_id] = useState('')
   const [department_name, setDepartment_name] = useState('')
   const [actionButton, setActionButton] = useState(false)
@@ -259,7 +258,6 @@ function MasterDetails2() {
     setSearchValueById(department_id)
     const newFilteredData = allEmployeesData?.filter((item) => item?.department_id == department_id)
     setSearchEmployeesData(newFilteredData)
-    setShowDepartment_name(department_name)
   }
   const handleClickCheckedEmployee = (employee_id) => {
     setIsCheckedEmployee(employee_id)
@@ -286,7 +284,7 @@ function MasterDetails2() {
           </div>
           {/* section option */}
         </div>
-        <div className="border-2  overflow-auto h-[200px]">
+        <div className="border-2  overflow-auto h-[250px]">
 
           {/* departments table  */}
 
@@ -411,11 +409,11 @@ function MasterDetails2() {
             <Button onClick={showToAddEmployee} className='bg-green-400'>Add Employee</Button>
           </div>
           <div>
-            <h3 className="font-bold  "> {handleClickCheckedDepartment && `${showDepartment_name} `}Employees Data</h3>
+            <h3 className="font-bold  "> Employees Data</h3>
           </div>
         </div>
         <hr />
-        <div className="h-[280px] overflow-auto border-2">
+        <div className="h-[265px] overflow-auto border-2">
 
           {/* Employees table  */}
 
