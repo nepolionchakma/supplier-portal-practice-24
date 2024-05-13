@@ -87,6 +87,7 @@ function MasterDetails2() {
     setFirst_name('')
     setLast_name('')
     setEmail('')
+    setActionButton('')
     setIsShowEmployee(!isShowEmployee)
     setIsEditableEmployeeId(false)
     setIsCheckedEmployee(false)
@@ -429,7 +430,7 @@ function MasterDetails2() {
                 <TableHead className='p-2'>Last Name</TableHead>
                 <TableHead className='p-2'>Email</TableHead>
                 <TableHead className='p-2'>DP</TableHead>
-                <TableHead className='p-2'>Action</TableHead>
+                <TableHead className='p-2 w-[18%]'>Action</TableHead>
               </TableRow>
             </TableHeader>
             {

@@ -7,7 +7,7 @@ import Logo from '../../../images/Supplier-Portal.jpg'
 function TopNav() {
   const { session } = useAuthContext()
   return (
-    <div className="flex justify-between shadow-lg items-center sticky top-0 overflow-hidden bg-white">
+    <div className="flex justify-between shadow-lg items-center sticky top-0 bg-white z-20">
       <div className=" ">
         <NavLink to='/'> <img className='w-[90px] p-2' src={Logo} alt="" /></NavLink>
 
