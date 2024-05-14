@@ -480,7 +480,7 @@ function MasterDetails3() {
           </div>
         </div>
         <hr />
-        <div className="h-[270px]  border-2">
+        <div className="h-[270px] overflow-auto border-2">
 
           {/* Employees table  */}
 
