@@ -26,6 +26,7 @@ import Bell from "./components/Bell/Bell"
 import SignUp from "./components/Profile/SignUp"
 import MasterDetails1 from "./components/MasterDetails/MasterDetails1"
 import MasterDetails2 from "./components/MasterDetails/MasterDetails2"
+import MasterDetails3 from "./components/MasterDetails/MasterDetails3"
 
 function LayOut() {
   const router = createBrowserRouter([
@@ -90,6 +91,10 @@ function LayOut() {
         {
           path: '/masterdetails2',
           element: <MasterDetails2 />
+        },
+        {
+          path: '/masterdetails3',
+          element: <MasterDetails3 />
         },
         {
           path: '/alldepartment/edit/:id',

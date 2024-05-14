@@ -1,129 +1,55 @@
-{/* search by name  */ }
-{
-  searchEmployeesNameData != '' && <TableBody>
-    {searchEmployeesData?.map((i) => (
-      <TableRow key={i.employee_id}>
-        <TableCell><input type="checkbox" name="" id="" /></TableCell>
-        <TableCell>{i.employee_id}</TableCell>
-        <TableCell>{i.employee_name}</TableCell>
-        <TableCell >{i.job_title}</TableCell>
-        <TableCell >{i.first_name}</TableCell>
-        <TableCell >{i.last_name}</TableCell>
-        <TableCell >{i.email}</TableCell>
-        <TableCell>
-          <div className='flex items-center gap-2 cursor-pointer'>
-            <Link className="p-1 rounded-full border-2 bg-green-400 text-xl" to={'/employees/edit/' + i.employee_id}>{<FilePenLineIcon />}</Link>
+import React, { useState } from 'react';
 
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <button className="p-1 rounded-full border-2 bg-red-400 text-xl" >{<FiTrash />}</button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Really Want To <span className="text-red-600">Delete</span> ?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently <span className="text-red-600">delete</span> from
-                    database and <span className="text-red-600">remove</span> your data from our servers.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel className='bg-green-700 text-white'>Cancel</AlertDialogCancel>
-                  <AlertDialogAction className='bg-red-600' onClick={() => handleDeleteDepartmentItem(i.employee_id, 'employees')}>Confirm</AlertDialogAction>
+const Pagination = ({ allDepartmentData }) => {
+  const [page, setPage] = useState(0);
 
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+  // Number of items per page
+  const itemsPerPage = 3;
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(allDepartmentData?.length / itemsPerPage);
 
-          </div></TableCell>
-      </TableRow>
-    ))
-      // .sort((a, b) => a.user_name.localeCompare(b.user_name))
+  // Handle page change
+  const handleSelectPage = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setPage(newPage);
     }
-  </TableBody>
-}
-{
-  searchEmployeesNameDataFilteredDepartment != '' && <TableBody>
-    {searchEmployeesDataByFilteredDepartment?.map((i) => (
-      <TableRow key={i.employee_id}>
-        <TableCell><input type="checkbox" name="" id="" /></TableCell>
-        <TableCell>{i.employee_id}</TableCell>
-        <TableCell>{i.employee_name}</TableCell>
-        <TableCell >{i.job_title}</TableCell>
-        <TableCell >{i.first_name}</TableCell>
-        <TableCell >{i.last_name}</TableCell>
-        <TableCell >{i.email}</TableCell>
-        <TableCell>
-          <div className='flex items-center gap-2 cursor-pointer'>
-            <Link className="p-1 rounded-full border-2 bg-green-400 text-xl" to={'/employees/edit/' + i.employee_id}>{<FilePenLineIcon />}</Link>
+  };
 
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <button className="p-1 rounded-full border-2 bg-red-400 text-xl" >{<FiTrash />}</button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Really Want To <span className="text-red-600">Delete</span> ?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently <span className="text-red-600">delete</span> from
-                    database and <span className="text-red-600">remove</span> your data from our servers.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel className='bg-green-700 text-white'>Cancel</AlertDialogCancel>
-                  <AlertDialogAction className='bg-red-600' onClick={() => handleDeleteDepartmentItem(i.employee_id, 'employees')}>Confirm</AlertDialogAction>
+  // Slice data for the current page
+  const sliceDataForPagination = allDepartmentData?.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+  // Check if the length is valid
+  const pageArrayLength = Number.isFinite(totalPages) ? totalPages : 0;
 
-          </div></TableCell>
-      </TableRow>
-    ))
-      // .sort((a, b) => a.user_name.localeCompare(b.user_name))
-    }
-  </TableBody>
-}
-{/* search by id  */ }
-{
-  searchEmployeesNameDataFilteredDepartment == '' &&
-    searchValueById != '' && <TableBody>
-      {searchEmployeesData?.map((i) => (
-        <TableRow key={i.employee_id}>
-          <TableCell><input type="checkbox" name="" id="" /></TableCell>
-          <TableCell>{i.employee_id}</TableCell>
-          <TableCell>{i.employee_name}</TableCell>
-          <TableCell >{i.job_title}</TableCell>
-          <TableCell >{i.first_name}</TableCell>
-          <TableCell >{i.last_name}</TableCell>
-          <TableCell >{i.email}</TableCell>
-          <TableCell>
-            <div className='flex items-center gap-2 cursor-pointer'>
-              <Link className="p-1 rounded-full border-2 bg-green-400 text-xl" to={'/employees/edit/' + i.employee_id}>{<FilePenLineIcon />}</Link>
+  return (
+    <div>
+      {/*--------------------------------- pagination start--------------------------- */}
+      <div className="border flex items-center justify-center gap-1 p-1">
+        <span
+          className={page > 0 ? 'cursor-pointer px-2 py-1 border-2 hover:bg-green-300' : 'disabled cursor-pointer px-2 py-1 border-2  '}
+          onClick={() => handleSelectPage(page - 1)}
+        >
+          Prev
+        </span>
+        {[...Array(pageArrayLength)].map((_, i) => (
+          <span
+            key={i}
+            className={page === i ? 'cursor-pointer px-2 bg-green-300 py-1 border-2' : 'cursor-pointer px-2 py-1 border-2 hover:bg-green-300'}
+            onClick={() => handleSelectPage(i)}
+          >
+            {i + 1}
+          </span>
+        ))}
+        <span
+          className={page < totalPages - 1 ? 'cursor-pointer px-2 py-1 border-2 hover:bg-green-300' : 'disabled cursor-pointer px-2 py-1 border-2 '}
+          onClick={() => handleSelectPage(page + 1)}
+        >
+          Next
+        </span>
+      </div>
+      {/*--------------------------------- pagination End--------------------------- */}
+    </div>
+  );
+};
 
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <button className="p-1 rounded-full border-2 bg-red-400 text-xl" >{<FiTrash />}</button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Really Want To <span className="text-red-600">Delete</span> ?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently <span className="text-red-600">delete</span> from
-                      database and <span className="text-red-600">remove</span> your data from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className='bg-green-700 text-white'>Cancel</AlertDialogCancel>
-                    <AlertDialogAction className='bg-red-600' onClick={() => handleDeleteDepartmentItem(i.employee_id, 'employees')}>Confirm</AlertDialogAction>
-
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-
-            </div></TableCell>
-        </TableRow>
-      ))
-        // .sort((a, b) => a.user_name.localeCompare(b.user_name))
-      }
-    </TableBody>
-}
+export default Pagination;

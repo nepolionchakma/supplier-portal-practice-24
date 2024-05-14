@@ -83,6 +83,12 @@ function LeftSideNav() {
           icon: <GaugeCircle className='text-2xl' />,
           link: '/masterdetails2'
         },
+        {
+          id: 5,
+          name: 'Master Details 3',
+          icon: <GaugeCircle className='text-2xl' />,
+          link: '/masterdetails3'
+        },
       ]
     },
     // {
