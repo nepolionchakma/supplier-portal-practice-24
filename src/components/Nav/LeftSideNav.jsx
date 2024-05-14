@@ -86,7 +86,7 @@ function LeftSideNav() {
         {
           id: 5,
           name: 'Master Details 3',
-          icon: <GaugeCircle className='text-2xl' />,
+          icon: <FiServer className='text-2xl' />,
           link: '/masterdetails3'
         },
       ]

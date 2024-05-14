@@ -440,27 +440,27 @@ function MasterDetails3() {
         </div>
         {/*--------------------------------- pagination start--------------------------- */}
         <div className="border flex items-center justify-center gap-1 p-1">
-          <span
+          <button
             className={pageDepartment > 0 ? 'cursor-pointer px-2 py-1 border-2 hover:bg-green-300' : 'disabled cursor-pointer px-2 py-1 border-2 bg-slate-300 hidden'}
             onClick={() => handleSelectPageDepartment(pageDepartment - 1)}
           >
             Prev
-          </span>
+          </button>
           {[...Array(pageArrayLengthDepartment)].map((_, i) => (
-            <span
+            <button
               key={i}
               className={pageDepartment === i ? 'cursor-pointer px-2 bg-green-300 py-1 border-2' : 'cursor-pointer px-2 py-1 border-2 hover:bg-green-300'}
               onClick={() => handleSelectPageDepartment(i)}
             >
               {i + 1}
-            </span>
+            </button>
           ))}
-          <span
+          <button
             className={pageDepartment < totalPagesDepartment - 1 ? 'cursor-pointer px-2 py-1 border-2 hover:bg-green-300' : 'disabled cursor-pointer px-2 py-1 border-2 bg-slate-300 hidden '}
             onClick={() => handleSelectPageDepartment(pageDepartment + 1)}
           >
             Next
-          </span>
+          </button>
         </div>
         {/*--------------------------------- pagination End--------------------------- */}
       </div>
@@ -687,27 +687,27 @@ function MasterDetails3() {
         </div>
         {/*--------------------------------- pagination start--------------------------- */}
         <div className="border flex items-center justify-center gap-1 p-1">
-          <span
+          <button
             className={pageEmployee > 0 ? 'cursor-pointer px-2 py-1 border-2 hover:bg-green-300' : 'disabled cursor-pointer px-2 py-1 border-2 bg-slate-300 '}
             onClick={() => handleSelectPageEmployee(pageEmployee - 1)}
           >
             Prev
-          </span>
+          </button>
           {[...Array(pageArrayLengthEmployee)].map((_, i) => (
-            <span
+            <button
               key={i}
               className={pageEmployee === i ? 'cursor-pointer px-2 bg-green-300 py-1 border-2' : 'cursor-pointer px-2 py-1 border-2 hover:bg-green-300'}
               onClick={() => handleSelectPageEmployee(i)}
             >
               {i + 1}
-            </span>
+            </button>
           ))}
-          <span
+          <button
             className={pageEmployee < totalPagesEmployee - 1 ? 'cursor-pointer px-2 py-1 border-2 hover:bg-green-300' : 'disabled cursor-pointer px-2 py-1 border-2 bg-slate-300'}
             onClick={() => handleSelectPageEmployee(pageEmployee + 1)}
           >
             Next
-          </span>
+          </button>
         </div>
         {/*--------------------------------- pagination End--------------------------- */}
       </div>

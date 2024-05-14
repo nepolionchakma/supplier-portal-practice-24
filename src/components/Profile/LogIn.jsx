@@ -40,8 +40,8 @@ function LogIn() {
       </div>
       <div className="my-4">
 
-        <h4 className="text-center">email: admin@gmail.com</h4>
-        <h4 className="text-center">pass : admin1</h4>
+        <h4 className="text-center">email: kallany@oracle.com</h4>
+        <h4 className="text-center">pass : kallany@1234</h4>
       </div>
     </div>
   )
