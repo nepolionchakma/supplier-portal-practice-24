@@ -14,8 +14,8 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-function Widget1(
-  { employee, setEmployees, index, employees, handleDeleteEmployee, minimize, handleMaximize, handleMinimize }) {
+function Widget2(
+  { employee, setEmployees, employees, handleDeleteEmployee, minimize, handleMaximize, handleMinimize }) {
 
   const {
     attributes,
@@ -121,4 +121,4 @@ function Widget1(
     </div>
   )
 }
-export default Widget1
+export default Widget2

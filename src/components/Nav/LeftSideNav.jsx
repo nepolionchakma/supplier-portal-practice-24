@@ -1,7 +1,7 @@
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useState } from 'react';
-import { FiActivity, FiCode, FiCrosshair, FiDatabase, FiDivideCircle, FiDroplet, FiFile, FiHardDrive, FiInfo, FiList, FiMenu, FiPlus, FiSend, FiServer, FiTarget, FiUser, FiUserPlus, FiUsers, FiX } from 'react-icons/fi';
+import { FiActivity, FiCode, FiCrosshair, FiDatabase, FiDivideCircle, FiDroplet, FiFeather, FiFile, FiHardDrive, FiInfo, FiList, FiMenu, FiPlus, FiSend, FiServer, FiTarget, FiUser, FiUserPlus, FiUsers, FiX } from 'react-icons/fi';
 import { FingerprintIcon, GaugeCircle } from 'lucide-react';
 function LeftSideNav() {
   const [isOpenMenu, setIsOpenMenu] = useState(false)
@@ -119,6 +119,12 @@ function LeftSideNav() {
           name: 'Department DND 3',
           icon: <FiActivity className='text-2xl' />,
           link: '/departmentdnd3'
+        },
+        {
+          id: 5,
+          name: 'Students',
+          icon: <FiFeather className='text-2xl' />,
+          link: '/students'
         },
       ]
     },

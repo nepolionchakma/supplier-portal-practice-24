@@ -311,6 +311,7 @@ function DepartmentDND3() {
 
                         <Widget1
                           key={employee.employee_id}
+                          index={index}
                           employee={employee}
                           setEmployees={setEmployees}
                           employees={employees}
