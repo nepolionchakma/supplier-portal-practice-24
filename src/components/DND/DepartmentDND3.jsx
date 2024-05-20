@@ -49,18 +49,24 @@ function DepartmentDND3() {
   const [dpIDEmployees, setDpIDEmployees] = useState([])
   const [isAddEmployeeShow, setIsAddEmployeeShow] = useState(false)
   const [useStateDefenceDence, setUseStateDefenceDence] = useState('')
+  const [newEmployees, setNewEmployees] = useState([])
 
-
+  const sortedEmployeesData = allEmployeesData.sort((a, b) => a.positions - b.positions)
+  useEffect(() => {
+    setNewEmployees(sortedEmployeesData)
+  }, [sortedEmployeesData])
+  // console.log(newEmployees)
   // -------------------------------------START
 
 
   const handleSaveData = async () => {
-    const updates = employees.map(employee => ({
+    const updates = employees.map((employee, index) => ({
       employee_id: employee.employee_id,
       employee_name: employee.employee_name,
       job_title: employee.job_title,
       email: employee.email,
       department_id: employee.department_id,
+      positions: index
 
     }));
     tosifySuccess('Update Successfully.')
@@ -154,7 +160,7 @@ function DepartmentDND3() {
   )
 
   useEffect(() => {
-    const filterSingleDepartmentEmployees = allEmployeesData?.filter((item) => item.department_id === selectDepartmentID)
+    const filterSingleDepartmentEmployees = newEmployees.filter((item) => item.department_id === selectDepartmentID)
     setEmployees(filterSingleDepartmentEmployees)
   }, [selectDepartmentID, useStateDefenceDence, employee_id, employee_name, first_name, last_name, job_title, email, department_id])
   useEffect(() => {
