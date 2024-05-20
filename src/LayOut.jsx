@@ -27,6 +27,10 @@ import SignUp from "./components/Profile/SignUp"
 import MasterDetails1 from "./components/MasterDetails/MasterDetails1"
 import MasterDetails2 from "./components/MasterDetails/MasterDetails2"
 import MasterDetails3 from "./components/MasterDetails/MasterDetails3"
+import DNDTodo from "./components/DND/DNDTodo"
+import DepartmentDND from "./components/DND/DepartmentDND"
+import DepartmentDND2 from "./components/DND/DepartmentDND2"
+import DepartmentDND3 from "./components/DND/DepartmentDND3"
 
 function LayOut() {
   const router = createBrowserRouter([
@@ -99,6 +103,22 @@ function LayOut() {
         {
           path: '/alldepartment/edit/:id',
           element: <UpdateDepartment />
+        },
+        {
+          path: '/todos',
+          element: <DNDTodo />
+        },
+        {
+          path: '/departmentdnd',
+          element: <DepartmentDND />
+        },
+        {
+          path: '/departmentdnd2',
+          element: <DepartmentDND2 />
+        },
+        {
+          path: '/departmentdnd3',
+          element: <DepartmentDND3 />
         },
         {
           path: '/orgid',

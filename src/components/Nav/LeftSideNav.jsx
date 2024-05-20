@@ -1,7 +1,7 @@
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useState } from 'react';
-import { FiCode, FiCrosshair, FiDatabase, FiDivideCircle, FiFile, FiHardDrive, FiInfo, FiList, FiMenu, FiPlus, FiSend, FiServer, FiUser, FiUserPlus, FiUsers, FiX } from 'react-icons/fi';
+import { FiActivity, FiCode, FiCrosshair, FiDatabase, FiDivideCircle, FiDroplet, FiFile, FiHardDrive, FiInfo, FiList, FiMenu, FiPlus, FiSend, FiServer, FiTarget, FiUser, FiUserPlus, FiUsers, FiX } from 'react-icons/fi';
 import { FingerprintIcon, GaugeCircle } from 'lucide-react';
 function LeftSideNav() {
   const [isOpenMenu, setIsOpenMenu] = useState(false)
@@ -91,6 +91,37 @@ function LeftSideNav() {
         },
       ]
     },
+    {
+      id: 4,
+      title: 'DND',
+      icon: <FiDroplet className='text-2xl' />,
+      cate: [
+        {
+          id: 1,
+          name: 'Todos',
+          icon: <FiTarget className='text-2xl' />,
+          link: "/todos"
+        },
+        {
+          id: 2,
+          name: 'Department DND',
+          icon: <FiFile className='text-2xl' />,
+          link: '/departmentdnd'
+        },
+        {
+          id: 3,
+          name: 'Department DND 2',
+          icon: <FiCrosshair className='text-2xl' />,
+          link: '/departmentdnd2'
+        },
+        {
+          id: 4,
+          name: 'Department DND 3',
+          icon: <FiActivity className='text-2xl' />,
+          link: '/departmentdnd3'
+        },
+      ]
+    },
     // {
     //   id: 4,
     //   title: 'Profile',
@@ -102,7 +133,7 @@ function LeftSideNav() {
   return (
     <div className="p-4 ">
       <nav className='flex gap-4'>
-        <div style={{ display: 'flex', height: '100%', minHeight: '400px' }}  >
+        <div style={{ display: 'flex', }} className='  h-[85vh]' >
 
           <Sidebar collapsed={collapsed} transitionDuration={1000}>
 
@@ -138,9 +169,9 @@ function LeftSideNav() {
                     <SubMenu
                       label={item.title}
                       icon={item.icon}
-                      open={index == item.id && true}
+                      // open={index == item.id && true}
                       onOpenChange={() => {
-                        setIsOpenMenu(!isOpenMenu)
+                        // setIsOpenMenu(!isOpenMenu)
                         setIndex(item.id)
                       }}
                     >

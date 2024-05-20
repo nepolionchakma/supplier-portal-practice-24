@@ -11,7 +11,7 @@ function AddDepartment() {
   }
   return (
     <div className="w-1/3 bg-slate-500 p-4 rounded mx-auto">
-      <h5 className="font-bold text-2xl text-center my-3">Update Department</h5>
+      <h5 className="font-bold text-2xl text-center my-3">Add Department</h5>
       <form onSubmit={handleAddDeparment}>
         <div className="flex justify-between items-center my-2">
           <label htmlFor="department_id">Department Id :</label>
@@ -21,7 +21,7 @@ function AddDepartment() {
           <label htmlFor="department_name">Department Name :</label>
           <input value={department_name || ''} onChange={(e) => setDepartment_name(e.target.value)} type="text" id="department_name" name="department_name" placeholder="Department Name" className="p-2 rounded ml-2  focus:text-orange-600 bg-white" />
         </div>
-        <button type="submit" className="bg-emerald-500 px-6 py-2 my-4 rounded text-white font-bold">Update</button>
+        <button type="submit" className="bg-emerald-500 px-6 py-2 my-4 rounded text-white font-bold">Submit</button>
       </form>
     </div>
   )

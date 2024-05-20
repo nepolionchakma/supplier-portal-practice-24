@@ -17,10 +17,10 @@ export const useAuthContext = () => useContext(AuthCreateContext);
 
 export const AuthContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)
-  const [data, setData] = useState(null)
-  const [allUserData, setAllUserData] = useState(null)
-  const [allEmployeesData, setAllEmployeesData] = useState(null)
-  const [allDepartmentData, setAllDepartmentData] = useState(null)
+  const [data, setData] = useState([])
+  const [allUserData, setAllUserData] = useState([])
+  const [allEmployeesData, setAllEmployeesData] = useState([])
+  const [allDepartmentData, setAllDepartmentData] = useState([])
   const [error, setError] = useState(null)
   const [session, setSession] = useState(null)
   const [messageInfo, setMessageInfo] = useState('')

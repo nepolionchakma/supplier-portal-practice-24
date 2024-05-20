@@ -40,7 +40,6 @@ function MasterDetails2() {
   const [isEditableDepartmentId, setIsEditableDepartmentId] = useState('')
   const [isEditableEmployeeId, setIsEditableEmployeeId] = useState('')
   const [department_id, setDepartment_id] = useState('')
-  const [employee_id, setEmployee_id] = useState('')
   const [department_name, setDepartment_name] = useState('')
   const [actionButton, setActionButton] = useState(false)
   const [isCheckBoxTrue, setIsCheckBoxTrue] = useState(true)
@@ -50,6 +49,7 @@ function MasterDetails2() {
   const [searchEmployeesDataByFilteredDepartment, setSearchEmployeesDataByFilteredDepartment] = useState([])
   const [searchEmployeesNameDataFilteredDepartment, setSearchEmployeesNameDataFilteredDepartment] = useState([])
 
+  const [employee_id, setEmployee_id] = useState('')
   const [first_name, setFirst_name] = useState('')
   const [last_name, setLast_name] = useState('')
   const [job_title, setJob_title] = useState('')
