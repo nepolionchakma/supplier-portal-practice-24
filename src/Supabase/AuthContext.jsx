@@ -219,8 +219,7 @@ export const AuthContextProvider = ({ children }) => {
       ])
       .select()
 
-    console.log(data)
-    console.log(error)
+
     if (data) tosifySuccess('Add Data Successfully.')
     if (error) tosifyError('Error ! Filled all correctly Please.')
   }

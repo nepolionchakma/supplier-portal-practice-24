@@ -47,12 +47,16 @@ function DepartmentDND2() {
   const [empID, setEmpID] = useState(29)
   const [employeeData, setEmployeeData] = useState([])
   const [employees, setEmployees] = useState([]);
+  const [newEmployees, setNewEmployees] = useState([]);
   const [dpIDEmployees, setDpIDEmployees] = useState([])
   const [isAddEmployeeShow, setIsAddEmployeeShow] = useState(false)
-  const [useStateDefenceDence, setUseStateDefenceDence] = useState('')
+  const [useStateDefenceDence, setUseStateDefenceDence] = useState(false)
 
-
-  // -------------------------------------START
+  const sortedEmployeesData = allEmployeesData.sort((a, b) => a.positions - b.positions)
+  useEffect(() => {
+    setNewEmployees(sortedEmployeesData)
+  }, [sortedEmployeesData])
+  // ------------------------------------- Save All Data START
 
 
   const handleSaveData = async () => {
@@ -89,7 +93,7 @@ function DepartmentDND2() {
 
   const handleDeleteEmployee = (id, info) => {
     handleDelete(id, info)
-    setUseStateDefenceDence(id)
+    setUseStateDefenceDence(!useStateDefenceDence)
     tosifySuccess(' Successfully Deleted.')
   }
   const handleSave = () => {
@@ -156,9 +160,10 @@ function DepartmentDND2() {
   )
 
   useEffect(() => {
-    const filterSingleDepartmentEmployees = allEmployeesData?.filter((item) => item.department_id === selectDepartmentID)
+    const filterSingleDepartmentEmployees = newEmployees?.filter((item) => item.department_id === selectDepartmentID)
     setEmployees(filterSingleDepartmentEmployees)
-  }, [selectDepartmentID, useStateDefenceDence, employee_id, employee_name, first_name, last_name, job_title, email, department_id])
+
+  }, [selectDepartmentID, useStateDefenceDence, employee_id, employee_name, first_name, last_name, job_title, email, department_id, allEmployeesData])
   useEffect(() => {
     const filterClickedDepartmentData = allDepartmentData?.filter((item) => item.department_id === selectDepartmentID)
     setSelectedDepartment(filterClickedDepartmentData)

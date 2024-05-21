@@ -63,7 +63,7 @@ function Widget2(
       style={style}
     >
 
-      <div className={`border-2 p-4 pt-0 shadow-xl  touch-none duration-700 rounded bg-slate-400 w-[100%] mx-auto   ${employee.min_n_max ? 'shadow-green-300 w-[80%] duration-700 mx-auto  ' : 'shadow-slate-600'} `}>
+      <div className={`border-2 p-4 pt-0 shadow-xl  touch-none duration-700 rounded bg-slate-400 w-[100%] mx-auto hover:shadow-slate-600  ${employee.min_n_max ? 'shadow-green-300 w-[80%] duration-700 mx-auto  ' : 'shadow-slate-400'} `}>
         <div
           className="cursor-grab py-4"
           ref={setNodeRef}
