@@ -15,7 +15,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 function Widget2(
-  { employee, setEmployees, employees, handleDeleteEmployee, minimize, handleMaximize, handleMinimize }) {
+  { employee, index, setEmployees, employees, handleDeleteEmployee, minimize, handleMaximize, handleMinimize }) {
 
   const {
     attributes,
@@ -36,13 +36,34 @@ function Widget2(
     setEmployees(updatedEmployees);
 
   };
+  const handleMinMax = (index) => {
+    const updatedEmployees = [...employees];
+    updatedEmployees[index].min_n_max = !updatedEmployees[index].min_n_max;
+    setEmployees(updatedEmployees);
+  }
+  const handleToggle = async (index) => {
+    updatedEmployees[index].min_n_max = !updatedEmployees[index].min_n_max;
+    const updatedEmployees = [...employees];
+    setEmployees(updatedEmployees);
+
+    const { data, error } = await supabase
+      .from('employees')
+      .update({ min_n_max: updatedEmployees[index].min_n_max })
+      .eq('employee_id', updatedEmployees[index].employee_id);
+
+    if (error) {
+      console.error('Error updating min_n_max:', error);
+    } else {
+      console.log('min_n_max updated:', data);
+    }
+  };
 
   return (
     <div
       style={style}
     >
 
-      <div className={`border-2 p-4 pt-0 shadow-xl  touch-none duration-700 rounded bg-slate-400 w-[100%] mx-auto   ${minimize.includes(employee.employee_id) ? 'shadow-green-300 w-[80%] duration-700 mx-auto  ' : 'shadow-slate-600'} `}>
+      <div className={`border-2 p-4 pt-0 shadow-xl  touch-none duration-700 rounded bg-slate-400 w-[100%] mx-auto   ${employee.min_n_max ? 'shadow-green-300 w-[80%] duration-700 mx-auto  ' : 'shadow-slate-600'} `}>
         <div
           className="cursor-grab py-4"
           ref={setNodeRef}
@@ -70,13 +91,7 @@ function Widget2(
             </AlertDialogContent>
           </AlertDialog>
 
-          {
-            minimize?.includes(employee.employee_id)
-              ?
-              <div className="hover:bg-sky-500 hover:text-white rounded-md p-1" onClick={() => handleMaximize(employee.employee_id)}>  <FiMaximize /></div>
-              :
-              <div className="hover:bg-sky-500 hover:text-white rounded-md p-1" onClick={() => handleMinimize(employee.employee_id)}>  <FiMinimize2 /></div>
-          }
+          <div className="hover:bg-sky-500 hover:text-white rounded-md p-1" onClick={() => handleMinMax(index)}>  {employee.min_n_max ? <FiMaximize /> : <FiMinimize2 />}  </div>
 
 
         </div>
@@ -91,7 +106,7 @@ function Widget2(
               </div>
             </div>
           </div>
-          <div className={`  ${minimize?.includes(employee.employee_id) ? 'hidden' : 'visible'}`}>
+          <div className={`  ${employee.min_n_max ? 'hidden' : 'visible'}`}>
             <div className="flex gap-5">
               <div className="flex flex-col gap-3 w-[15%]">
                 <label htmlFor="">Employee Id</label>

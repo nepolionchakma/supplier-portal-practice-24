@@ -56,13 +56,14 @@ function DepartmentDND2() {
 
 
   const handleSaveData = async () => {
-    const updates = employees.map(employee => ({
+    const updates = employees.map((employee, index) => ({
       employee_id: employee.employee_id,
       employee_name: employee.employee_name,
       job_title: employee.job_title,
       email: employee.email,
       department_id: employee.department_id,
-
+      positions: index,
+      min_n_max: employee.min_n_max
     }));
     tosifySuccess('Update Successfully.')
 
@@ -189,10 +190,10 @@ function DepartmentDND2() {
         {/* right side  */}
         <div className="w-[65%] h-[89vh] overflow-y-scroll scroll-smooth  border-slate-500 bg-slate-200 rounded border-2">
           {/* <hr className="borde   border-slate-700 " /> */}
-          <div className="text-center my-3   p-2 overflow-hidden z-11 bg-slate-200">
+          <div className="text-center my-3 z-10 p-2 pb-4 sticky top-0 shadow-lg shadow-slate-400 overflow-hidden z-11 bg-slate-200">
             <h4>Department</h4>
           </div>
-          <hr className="border-3 mb-3 border-slate-700 " />
+          {/* <hr className="border-3 mb-3 border-slate-700 " /> */}
           <div className="p-9">
             {
               selectedDepartment?.map((i) => (
@@ -210,7 +211,7 @@ function DepartmentDND2() {
                     </div>
                   </form>
                   <br />
-                  <div className="border-2 p-4 shadow-xl hover:shadow-green-300 duration-500 rounded bg-slate-400  gap-4 flex flex-col">
+                  <div className="border-2 sticky top-60 p-4 shadow-xl hover:shadow-green-300 duration-500 rounded bg-slate-400  gap-4 flex flex-col">
                     <div className="">
                       <div className="flex flex-row-reverse gap-3 ">
                         <div>  <FiX /> </div>
@@ -233,19 +234,19 @@ function DepartmentDND2() {
             }
           </div>
           {/* <hr className="border-3 border-slate-700 " /> */}
-          <div className=" overflow-hidden z-11 bg-slate-200">
+          <div className=" overflow-hidden sticky shadow-lg shadow-slate-400 top-0 z-20 bg-slate-200">
             {/* ------------------------------------------ */}
             <hr className="borde   border-slate-700 " />
             <div className="text-center my-3">
               <h4>Employees Data</h4>
             </div>
-            <hr className="border-3 border-slate-700 " />
+            {/* <hr className="border-3 border-slate-700 " /> */}
           </div>
           {
-            selectDepartmentID && <div className="m-4 flex flex-row-reverse items-center gap-2">
+            selectDepartmentID && <div className="m-4 flex flex-row-reverse items-center gap-2 sticky z-30 top-14">
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger onClick={handleSaveData} className='p-3 bg-white shadow-lg  hover:bg-green-600 duration-300 hover:text-white text-green-600 rounded-full'>
+                  <TooltipTrigger onClick={handleSaveData} className='p-3 bg-white shadow-lg shadow-green-600 hover:shadow-slate-900 hover:bg-green-600 duration-300 hover:text-white text-green-600 rounded-full'>
                     <FiSave className="text-2xl " />
                   </TooltipTrigger>
                   <TooltipContent>
@@ -255,7 +256,7 @@ function DepartmentDND2() {
               </TooltipProvider>
               <div
                 onClick={() => setIsAddEmployeeShow(!isAddEmployeeShow)}
-                className='p-4 shadow-lg bg-white hover:bg-green-600 duration-300 hover:text-white text-green-600 rounded-full'>
+                className='p-4 shadow-lg bg-white hover:bg-green-600 duration-300 hover:text-white shadow-green-600 hover:shadow-slate-900  text-green-600 rounded-full'>
                 <FiUserPlus />
               </div>
             </div>
