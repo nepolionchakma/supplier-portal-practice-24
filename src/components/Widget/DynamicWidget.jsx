@@ -14,8 +14,9 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-function Widget2(
-  { employee, index, setEmployees, employees, handleDeleteEmployee, minimize, handleMaximize, handleMinimize }) {
+function DynamicWidget(
+  { name, id1, id2, title, email, data, index, setDatas, datas,
+    handleDelete, min_n_max, setMin_n_max, onchange_name, onchange_id1, onchange_title, onchange_email, onchange_id2 }) {
 
   const {
     attributes,
@@ -23,7 +24,7 @@ function Widget2(
     setNodeRef,
     transform,
     transition,
-  } = useSortable({ id: employee });
+  } = useSortable({ id: data });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -31,39 +32,24 @@ function Widget2(
   };
 
   const handleChange = (index, field, value) => {
-    const updatedEmployees = [...employees];
+    const updatedEmployees = [...datas];
     updatedEmployees[index][field] = value;
-    setEmployees(updatedEmployees);
+    setDatas(updatedEmployees);
 
   };
-  const handleMinMax = (index) => {
-    const updatedEmployees = [...employees];
-    updatedEmployees[index].min_n_max = !updatedEmployees[index].min_n_max;
-    setEmployees(updatedEmployees);
+  const handleMinMax = (index, id1) => {
+    const updatedMin_n_max = [...min_n_max];
+    updatedMin_n_max[index].employee_id = id1;
+    updatedMin_n_max[index].min_n_max = !updatedMin_n_max[index].min_n_max;
+    setMin_n_max(updatedMin_n_max);
   }
-  const handleToggle = async (index) => {
-    const updatedEmployees = [...employees];
-    updatedEmployees[index].min_n_max = !updatedEmployees[index].min_n_max;
-    setEmployees(updatedEmployees);
-
-    const { data, error } = await supabase
-      .from('employees')
-      .update({ min_n_max: updatedEmployees[index].min_n_max })
-      .eq('employee_id', updatedEmployees[index].employee_id);
-
-    if (error) {
-      console.error('Error updating min_n_max:', error);
-    } else {
-      console.log('min_n_max updated:', data);
-    }
-  };
 
   return (
     <div
       style={style}
     >
 
-      <div className={`border-2 p-4 pt-0 shadow-xl  touch-none duration-700 rounded bg-slate-400 w-[100%] mx-auto hover:shadow-slate-600  ${employee.min_n_max ? 'shadow-green-300 w-[80%] duration-700 mx-auto  ' : 'shadow-slate-400'} `}>
+      <div className={`border-2 p-4 pt-0 shadow-xl  touch-none duration-700 rounded bg-slate-400 w-[100%] mx-auto hover:shadow-slate-600  ${min_n_max ? 'shadow-green-300 w-[80%] duration-700 mx-auto  ' : 'shadow-slate-400'} `}>
         <div
           className="cursor-grab py-4"
           ref={setNodeRef}
@@ -86,12 +72,12 @@ function Widget2(
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel className='bg-green-700 text-white'>Cancel</AlertDialogCancel>
-                <AlertDialogAction className='bg-red-600' onClick={() => handleDeleteEmployee(employee.employee_id, 'employees')}>Confirm</AlertDialogAction>
+                <AlertDialogAction className='bg-red-600' onClick={() => handleDelete(data.employee_id, 'employees')}>Confirm</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
 
-          <div className="hover:bg-sky-500 hover:text-white rounded-md p-1" onClick={() => handleMinMax(index)}>  {employee.min_n_max ? <FiMaximize /> : <FiMinimize2 />}  </div>
+          <div className="hover:bg-sky-500 hover:text-white rounded-md p-1" onClick={() => handleMinMax(index, id1)}>  {min_n_max ? <FiMaximize /> : <FiMinimize2 />}  </div>
 
 
         </div>
@@ -101,32 +87,32 @@ function Widget2(
             <div className="flex gap-3">
               <label htmlFor="">Employee Name </label>
               <div className="  px-3 py-1 rounded">
-                <input className="px-2 rounded" type="text" value={employee.employee_name}
-                  onChange={e => handleChange(index, 'employee_name', e.target.value)} />
+                <input className="px-2 rounded" type="text" value={name}
+                  onChange={e => handleChange(index, { onchange_name }, e.target.value)} />
               </div>
             </div>
           </div>
-          <div className={`  ${employee.min_n_max ? 'hidden' : 'visible'}`}>
+          <div className={`  ${data.min_n_max ? 'hidden' : 'visible'}`}>
             <div className="flex gap-5">
               <div className="flex flex-col gap-3 w-[15%]">
                 <label htmlFor="">Employee Id</label>
-                <input readOnly className="px-2 rounded" type="text" value={employee.employee_id}
-                  onChange={e => handleChange(index, 'employee_id', e.target.value)} />
+                <input readOnly className="px-2 rounded" type="text" value={id1}
+                  onChange={e => handleChange(index, { onchange_id1 }, e.target.value)} />
               </div>
               <div className="flex flex-col gap-3 w-[25%]">
                 <label htmlFor="">Job Title</label>
-                <input className="px-2 rounded" type="text" value={employee.job_title}
-                  onChange={e => handleChange(index, 'job_title', e.target.value)} />
+                <input className="px-2 rounded" type="text" value={title}
+                  onChange={e => handleChange(index, { onchange_title }, e.target.value)} />
               </div>
               <div className="flex flex-col gap-3 w-[30%]">
                 <label htmlFor="">Email</label>
-                <input className="px-2 rounded" type="text" value={employee.email}
-                  onChange={e => handleChange(index, 'email', e.target.value)} />
+                <input className="px-2 rounded" type="text" value={email}
+                  onChange={e => handleChange(index, { onchange_Email: onchange_email }, e.target.value)} />
               </div>
               <div className="flex flex-col gap-3 w-[20%]">
                 <label htmlFor="">Department Id</label>
-                <input readOnly className="px-2 rounded" type="text" value={employee.department_id}
-                  onChange={e => handleChange(index, 'department_id', e.target.value)} />
+                <input readOnly className="px-2 rounded" type="text" value={id2}
+                  onChange={e => handleChange(index, { onchange_id2 }, e.target.value)} />
               </div>
             </div>
           </div>
@@ -136,4 +122,4 @@ function Widget2(
     </div>
   )
 }
-export default Widget2
+export default DynamicWidget

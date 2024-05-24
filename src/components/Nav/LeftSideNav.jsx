@@ -122,6 +122,12 @@ function LeftSideNav() {
         },
         {
           id: 5,
+          name: 'Department DND 4',
+          icon: <FiActivity className='text-2xl' />,
+          link: '/departmentdnd4'
+        },
+        {
+          id: 6,
           name: 'Students',
           icon: <FiFeather className='text-2xl' />,
           link: '/students'

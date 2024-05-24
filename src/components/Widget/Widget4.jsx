@@ -14,8 +14,8 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-function Widget2(
-  { employee, index, setEmployees, employees, handleDeleteEmployee, minimize, handleMaximize, handleMinimize }) {
+function Widget4(
+  { employee, index, setEmployees, employees, handleDeleteEmployee, min_n_max, setMin_n_max }) {
 
   const {
     attributes,
@@ -36,10 +36,11 @@ function Widget2(
     setEmployees(updatedEmployees);
 
   };
-  const handleMinMax = (index) => {
-    const updatedEmployees = [...employees];
-    updatedEmployees[index].min_n_max = !updatedEmployees[index].min_n_max;
-    setEmployees(updatedEmployees);
+  const handleMinMax = (index, employee_id) => {
+    const updatedMin_n_max = [...min_n_max];
+    updatedMin_n_max[index].employee_id = employee_id;
+    updatedMin_n_max[index].min_n_max = !updatedMin_n_max[index].min_n_max;
+    setMin_n_max(updatedMin_n_max);
   }
   const handleToggle = async (index) => {
     const updatedEmployees = [...employees];
@@ -91,7 +92,7 @@ function Widget2(
             </AlertDialogContent>
           </AlertDialog>
 
-          <div className="hover:bg-sky-500 hover:text-white rounded-md p-1" onClick={() => handleMinMax(index)}>  {employee.min_n_max ? <FiMaximize /> : <FiMinimize2 />}  </div>
+          <div className="hover:bg-sky-500 hover:text-white rounded-md p-1" onClick={() => handleMinMax(index, employee.employee_id)}>  {employee.min_n_max ? <FiMaximize /> : <FiMinimize2 />}  </div>
 
 
         </div>
@@ -136,4 +137,4 @@ function Widget2(
     </div>
   )
 }
-export default Widget2
+export default Widget4

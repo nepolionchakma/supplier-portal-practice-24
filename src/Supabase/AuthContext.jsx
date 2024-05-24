@@ -89,6 +89,7 @@ export const AuthContextProvider = ({ children }) => {
         const { data, error } = await supabase
           .from('employees')
           .select('*')
+          .order('positions', { ascending: true })
         if (error) setError(error)
         if (data) setAllEmployeesData(data)
         setIsLoading(false)
@@ -107,10 +108,12 @@ export const AuthContextProvider = ({ children }) => {
       let { data: departments, error } = await supabase
         .from('departments')
         .select('*')
+        .order('department_id', { ascending: true })
       setAllDepartmentData(departments)
     }
     allDepartmentData()
   }, [allDepartmentData])
+
   const addDepartment = async (department_id, department_name) => {
     const { data, error } = await supabase
       .from('departments')
@@ -210,12 +213,27 @@ export const AuthContextProvider = ({ children }) => {
       .update({ user_name, first_name, middle_name, last_name, job_title, org_type, org_id, org_id_column_name })
       .eq('user_id', id)
   }
+
+
   const addDataEmployeesTable = async (employee_id, employee_name, first_name, last_name, job_title, email, department_id) => {
 
     const { data, error } = await supabase
       .from('employees')
       .insert([
         { employee_id, employee_name, first_name, last_name, job_title, email, department_id }
+      ])
+      .select()
+
+
+    if (data) tosifySuccess('Add Data Successfully.')
+    if (error) tosifyError('Error ! Filled all correctly Please.')
+  }
+  const addEmployeesState = async (employee_id) => {
+
+    const { data, error } = await supabase
+      .from('employees_state')
+      .insert([
+        { employee_id }
       ])
       .select()
 
@@ -292,7 +310,7 @@ export const AuthContextProvider = ({ children }) => {
     console.log(error)
   }
   const value = {
-    signIn, signUp, createUser, data, isLoading, error, session, updateUserData, handleDelete, inviteMagicLinkUser: inviteUserByEmail, confirmAccount, generateInvite, messageInfo, tosifySuccess, tosifyError, allUserData, allEmployeesData, addDataEmployeesTable, inviteViaMail, allDepartmentData, addDepartment
+    signIn, signUp, createUser, data, isLoading, error, session, updateUserData, handleDelete, inviteMagicLinkUser: inviteUserByEmail, confirmAccount, generateInvite, messageInfo, tosifySuccess, tosifyError, allUserData, allEmployeesData, addDataEmployeesTable, inviteViaMail, allDepartmentData, addDepartment, addEmployeesState
   }
   return (
     <AuthCreateContext.Provider value={value}>

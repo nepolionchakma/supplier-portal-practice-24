@@ -25,11 +25,11 @@ import {
 } from "@/components/ui/tooltip"
 import AddEmployee from "./AddEmployee"
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd"
-import Widget2 from "../Widget/Widget2"
+import Widget4 from "../Widget/Widget4"
 
 
-function DepartmentDND2() {
-  const { allDepartmentData, allEmployeesData, handleDelete, addDataEmployeesTable, tosifySuccess } = useAuthContext()
+function DepartmentDND4() {
+  const { allDepartmentData, allEmployeesData, handleDelete, addDataEmployeesTable, tosifySuccess, addEmployeesState } = useAuthContext()
   const [department_id, setDepartment_id] = useState('')
   const [employee_id, setEmployee_id] = useState('')
   const [selectedDepartment_id, setSelectedDepartment_id] = useState('')
@@ -47,29 +47,20 @@ function DepartmentDND2() {
   const [empID, setEmpID] = useState(29)
   const [employeeData, setEmployeeData] = useState([])
   const [employees, setEmployees] = useState([]);
-  const [newEmployees, setNewEmployees] = useState([]);
+  const [min_n_max, setMin_n_max] = useState([])
   const [dpIDEmployees, setDpIDEmployees] = useState([])
   const [isAddEmployeeShow, setIsAddEmployeeShow] = useState(false)
   const [useStateDefenceDence, setUseStateDefenceDence] = useState('')
-
-  // const employeesDataAll=[...allEmployeesData]
-  // useEffect(() => {
-  //   const sortedEmployeesData = allEmployeesData.sort((a, b) => a.positions - b.positions)
-  //   setNewEmployees(sortedEmployeesData)
-  // }, [useStateDefenceDence, handleDelete, addDataEmployeesTable])
-
+  const [newEmployees, setNewEmployees] = useState([])
+  const [positions, setPositions] = useState('')
+  const sortedEmployeesData = allEmployeesData.sort((a, b) => a.positions - b.positions)
   useEffect(() => {
-    const filterSingleDepartmentEmployees = allEmployeesData?.filter((item) => item.department_id === selectDepartmentID)
-    setEmployees(filterSingleDepartmentEmployees)
-  }, [selectDepartmentID])
-  useEffect(() => {
-    const filterClickedDepartmentData = allDepartmentData?.filter((item) => item.department_id === selectDepartmentID)
-    setSelectedDepartment(filterClickedDepartmentData)
-  }, [selectDepartmentID])
+    setNewEmployees(sortedEmployeesData)
+  }, [sortedEmployeesData])
+  // console.log(newEmployees)
+  // -------------------------------------START
 
-  // console.log(useStateDefenceDence)
 
-  // ------------------------------------- Save All Data START
   const handleSaveData = async () => {
     const updates = employees.map((employee, index) => ({
       employee_id: employee.employee_id,
@@ -77,23 +68,36 @@ function DepartmentDND2() {
       job_title: employee.job_title,
       email: employee.email,
       department_id: employee.department_id,
+    }));
+    let position;
+    for (let i = 0; i <= employees.length; i++) {
+      position(i)
+    }
+    setPositions(position)
+    const updatesMin_n_max = min_n_max.map((employee, index) => ({
+      employee_id: employee.employee_id,
+      min_n_max: employee.min_n_max,
       positions: index,
-      min_n_max: employee.min_n_max
     }));
     tosifySuccess('Update Successfully.')
-
+    // employees Update
     const { data, error } = await supabase
-      .from('employees')  // Make sure this matches your table name in Supabase
+      .from('employees')
       .upsert(updates, { onConflict: ['employee_id'] });
-
     if (error) {
       console.error('Error updating employees:', error);
     } else {
       console.log('Employees updated:', data);
     }
+    //employees state
+    // await supabase
+    //   .from('employees_state')
+    //   .upsert(updatesMin_n_max, { onConflict: ['employee_id'] });
   };
+
   // --------------------------END
 
+  // console.log(employee_id, employee_name, job_title, email, department_id)
 
   const handleUpdateDepartment = (e) => {
     e.preventDefault()
@@ -119,32 +123,23 @@ function DepartmentDND2() {
   // add employee start
   // add Employee
   const handleAddEmployee = async () => {
-    if (employee_id == '' ||
-      employee_name == '' ||
-      first_name == '' ||
-      last_name == '' ||
-      job_title == '' ||
-      email == '' ||
+    if (employee_id == '' &&
+      employee_name == '' &&
+      first_name == '' &&
+      last_name == '' &&
+      job_title == '' &&
+      email == '' &&
       department_id == '') alert('Please fill all input filled')
-    if (employee_id != '' &&
-      employee_name != '' &&
-      first_name != '' &&
-      last_name != '' &&
-      job_title != '' &&
-      email != '' &&
-      department_id != '') {
-      setUseStateDefenceDence(department_id)
-      addDataEmployeesTable(employee_id, employee_name, first_name, last_name, job_title, email, department_id)
-      setIsAddEmployeeShow(!isAddEmployeeShow)
-      setEmployee_id('')
-      setEmployee_name('')
-      setFirst_name('')
-      setLast_name('')
-      setJob_title('')
-      setEmail('')
-      setDepartment_id('')
-    }
-
+    addDataEmployeesTable(employee_id, employee_name, first_name, last_name, job_title, email, department_id)
+    addEmployeesState(employee_id)
+    setIsAddEmployeeShow(!isAddEmployeeShow)
+    setEmployee_id('')
+    setEmployee_name('')
+    setFirst_name('')
+    setLast_name('')
+    setJob_title('')
+    setEmail('')
+    setDepartment_id('')
   }
   // add employee end
 
@@ -178,6 +173,15 @@ function DepartmentDND2() {
     })
   )
 
+  useEffect(() => {
+    const filterSingleDepartmentEmployees = newEmployees.filter((item) => item.department_id === selectDepartmentID)
+    setEmployees(filterSingleDepartmentEmployees)
+  }, [selectDepartmentID, useStateDefenceDence, employee_id, employee_name, first_name, last_name, job_title, email, department_id])
+  useEffect(() => {
+    const filterClickedDepartmentData = allDepartmentData?.filter((item) => item.department_id === selectDepartmentID)
+    setSelectedDepartment(filterClickedDepartmentData)
+  }, [selectDepartmentID])
+
 
 
 
@@ -204,10 +208,10 @@ function DepartmentDND2() {
         {/* right side  */}
         <div className="w-[65%] h-[89vh] overflow-y-scroll scroll-smooth  border-slate-500 bg-slate-200 rounded border-2">
           {/* <hr className="borde   border-slate-700 " /> */}
-          <div className="text-center my-3 z-10 p-2 pb-4 sticky top-0 shadow-lg shadow-slate-400 overflow-hidden z-11 bg-slate-200">
+          <div className="text-center my-3   p-2 overflow-hidden z-11 bg-slate-200">
             <h4>Department</h4>
           </div>
-          {/* <hr className="border-3 mb-3 border-slate-700 " /> */}
+          <hr className="border-3 mb-3 border-slate-700 " />
           <div className="p-9">
             {
               selectedDepartment?.map((i) => (
@@ -225,7 +229,7 @@ function DepartmentDND2() {
                     </div>
                   </form>
                   <br />
-                  <div className="border-2 sticky top-60 p-4 shadow-xl hover:shadow-green-300 duration-500 rounded bg-slate-400  gap-4 flex flex-col">
+                  <div className="border-2 p-4 shadow-xl hover:shadow-green-300 duration-500 rounded bg-slate-400  gap-4 flex flex-col">
                     <div className="">
                       <div className="flex flex-row-reverse gap-3 ">
                         <div>  <FiX /> </div>
@@ -248,19 +252,19 @@ function DepartmentDND2() {
             }
           </div>
           {/* <hr className="border-3 border-slate-700 " /> */}
-          <div className=" overflow-hidden sticky shadow-lg shadow-slate-400 top-0 z-20 bg-slate-200">
+          <div className=" overflow-hidden z-11 bg-slate-200">
             {/* ------------------------------------------ */}
             <hr className="borde   border-slate-700 " />
             <div className="text-center my-3">
               <h4>Employees Data</h4>
             </div>
-            {/* <hr className="border-3 border-slate-700 " /> */}
+            <hr className="border-3 border-slate-700 " />
           </div>
           {
-            selectDepartmentID && <div className="m-4 flex flex-row-reverse items-center gap-2 sticky z-30 top-14">
+            selectDepartmentID && <div className="m-4 flex flex-row-reverse items-center gap-2">
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger onClick={handleSaveData} className='p-3 bg-white shadow-lg shadow-green-600 hover:shadow-slate-900 hover:bg-green-600 duration-300 hover:text-white text-green-600 rounded-full'>
+                  <TooltipTrigger onClick={handleSaveData} className='p-3 bg-white shadow-lg  hover:bg-green-600 duration-300 hover:text-white text-green-600 rounded-full'>
                     <FiSave className="text-2xl " />
                   </TooltipTrigger>
                   <TooltipContent>
@@ -270,7 +274,7 @@ function DepartmentDND2() {
               </TooltipProvider>
               <div
                 onClick={() => setIsAddEmployeeShow(!isAddEmployeeShow)}
-                className='p-4 shadow-lg bg-white hover:bg-green-600 duration-300 hover:text-white shadow-green-600 hover:shadow-slate-900  text-green-600 rounded-full'>
+                className='p-4 shadow-lg bg-white hover:bg-green-600 duration-300 hover:text-white text-green-600 rounded-full'>
                 <FiUserPlus />
               </div>
             </div>
@@ -325,12 +329,14 @@ function DepartmentDND2() {
                     {
                       employees.map((employee, index) => (
 
-                        <Widget2
+                        <Widget4
                           key={employee.employee_id}
                           index={index}
                           employee={employee}
                           setEmployees={setEmployees}
                           employees={employees}
+                          min_n_max={min_n_max}
+                          setMin_n_max={setMin_n_max}
                           handleDeleteEmployee={handleDeleteEmployee}
                           minimize={minimize}
                           handleMaximize={handleMaximize}
@@ -351,4 +357,4 @@ function DepartmentDND2() {
     </div >
   )
 }
-export default DepartmentDND2
+export default DepartmentDND4
