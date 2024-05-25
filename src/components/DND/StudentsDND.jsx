@@ -40,7 +40,7 @@ const StudentsDND = () => {
 
     const emptyValueChecked = students.filter(student => student.name === '' || student.department === '')
     console.log(emptyValueChecked)
-    if (emptyValueChecked.length > 0) return alert('Please fill the all values.')
+    if (emptyValueChecked.length > 0) return alert('Please fill all values.')
     const updateStudents = students.map(student => (
       {
         id: student.id,
@@ -111,10 +111,10 @@ const StudentsDND = () => {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex gap-3 w-[20%]  sticky top-20">
-        <button onClick={handleSave} className="p-3 rounded-full bg-slate-500 hover:bg-green-500 shadow-md shadow-red-400">
+        <button onClick={handleSave} className="p-3 rounded-full bg-slate-500 hover:bg-green-500 shadow-md hover:shadow-red-400">
           <FiSave className="text-2xl " />
         </button>
-        <button onClick={addWidget} className="p-3 rounded-full bg-slate-500 hover:bg-green-500 shadow-md shadow-blue-400">
+        <button onClick={addWidget} className="p-3 rounded-full bg-slate-500 hover:bg-green-500 shadow-md hover:shadow-blue-400">
           <FiPlus className="text-2xl " />
         </button>
       </div>
