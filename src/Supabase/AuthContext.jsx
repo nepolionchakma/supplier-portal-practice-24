@@ -200,6 +200,18 @@ export const AuthContextProvider = ({ children }) => {
           .delete()
           .eq('department_id', id)
       }
+      if (info == 'students') {
+        await supabase
+          .from('students')
+          .delete()
+          .eq('id', id)
+      }
+      if (info == 'student_widget_attributes') {
+        await supabase
+          .from('student_widget_attributes')
+          .delete()
+          .eq('student_id', id)
+      }
 
     } catch (error) {
       console.log(error)

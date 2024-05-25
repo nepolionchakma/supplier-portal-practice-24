@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { supabase } from "@/Supabase/AuthContext"
+import { supabase, useAuthContext } from "@/Supabase/AuthContext"
 import { DndContext, KeyboardSensor, PointerSensor, TouchSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core"
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
@@ -7,25 +7,83 @@ import StudentAllWidget from "../Widget/StudentAllWidget"
 import { FiPlus, FiSave } from "react-icons/fi"
 import StudentAddWidget from "../Widget/StudentAddWidget"
 const StudentsDND = () => {
-
+  const { tosifySuccess, tosifyError } = useAuthContext()
   const [students, setStudents] = useState([]);
-  const addWidget = () => {
-    const newWidget = { id: students.length ? students[students.length - 1].id + 1 : 1, name: '', department: '' };
-    setStudents([...students, newWidget]);
-  };
-  // console.log(students)
+  const [index, setIndex] = useState([])
   useEffect(() => {
     const studentData = async () => {
-      let { data, error } = await supabase
-        .from('students')
-        .select('*')
-        .order('id', { ascending: true })
-      // console.log(data)
-      if (students) setStudents(data.map(item => ({ ...item, fromSupabase: true })));
+      try {
+        let { data: students_data, error: students_error } = await supabase
+          .from('students')
+          .select('*')
+        let { data: student_widget_attributes, error: student_widget_attributes_error } = await supabase
+          .from('student_widget_attributes')
+          .select('*')
+        // Merge data based on common 'id' field
+        const mergedData = students_data.map(student => ({
+          ...student,
+          ...(student_widget_attributes.find(attr => attr.student_id === student.id) || {}),
+        }));
+
+        const sortedData = [...mergedData.sort((a, b) => a.position - b.position)];
+        setStudents(sortedData);
+      } catch (error) {
+        console.log(error)
+      }
+
     }
     studentData()
   }, [])
-  console.log(students)
+
+
+  const handleSave = async () => {
+
+    const emptyValueChecked = students.filter(student => student.name === '' || student.department === '')
+    console.log(emptyValueChecked)
+    if (emptyValueChecked.length > 0) return alert('Please fill the all values.')
+    const updateStudents = students.map(student => (
+      {
+        id: student.id,
+        name: student.name,
+        department: student.department
+      }
+    ))
+    const updateStudentsAttributes = students.map((student, index) => (
+      {
+        student_id: student.student_id,
+        position: index,
+        is_minimized: student.is_minimized,
+      }
+    ))
+
+    try {
+
+      // Upsert users
+      await supabase
+        .from('students')
+        .upsert(updateStudents, { onConflict: ['id'] });
+
+      // Upsert departments
+      await supabase
+        .from('student_widget_attributes')
+        .upsert(updateStudentsAttributes, { onConflict: ['student_id'] });
+
+      tosifySuccess('Successfully save data.')
+    } catch (error) {
+      tosifyError('Error : ', error.message)
+    }
+
+  }
+
+  const addWidget = () => {
+    const maxValue = Math.max(...students.map(obj => obj.id));
+    const id = students.length ? maxValue + 1 : 1
+
+    const newWidget = { id: id, name: '', department: '', is_minimized: false, position: index + 1, student_id: id };
+    setStudents([...students, newWidget]);
+  };
+
+  // ----------------Drag And Drop Start
   const handleDragEnd = (event) => {
     const { active, over } = event;
     console.log(active.id, 'active id')
@@ -52,11 +110,11 @@ const StudentsDND = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex gap-3 w-[20%]">
-        <button className="p-3  rounded-full bg-slate-500 hover:bg-green-500 shadow-md shadow-red-400">
+      <div className="flex gap-3 w-[20%]  sticky top-20">
+        <button onClick={handleSave} className="p-3 rounded-full bg-slate-500 hover:bg-green-500 shadow-md shadow-red-400">
           <FiSave className="text-2xl " />
         </button>
-        <button onClick={addWidget} className="p-3  rounded-full bg-slate-500 hover:bg-green-500 shadow-md shadow-blue-400">
+        <button onClick={addWidget} className="p-3 rounded-full bg-slate-500 hover:bg-green-500 shadow-md shadow-blue-400">
           <FiPlus className="text-2xl " />
         </button>
       </div>
@@ -82,6 +140,9 @@ const StudentsDND = () => {
                     student={student}
                     students={students}
                     setStudents={setStudents}
+                    setIndex={setIndex}
+                    addWidget={addWidget}
+                    tosifyError={tosifyError}
                   />
                 ))
               }
