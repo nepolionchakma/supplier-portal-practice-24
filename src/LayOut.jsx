@@ -33,6 +33,7 @@ import DepartmentDND2 from "./components/DND/DepartmentDND2"
 import DepartmentDND3 from "./components/DND/DepartmentDND3"
 import StudentsDND from "./components/DND/StudentsDND"
 import DepartmentDND4 from "./components/DND/DepartmentDND4"
+import StudentsDND2 from "./components/DND/StudentsDND2"
 
 function LayOut() {
   const router = createBrowserRouter([
@@ -129,6 +130,10 @@ function LayOut() {
         {
           path: '/students',
           element: <StudentsDND />
+        },
+        {
+          path: '/students2',
+          element: <StudentsDND2 />
         },
         {
           path: '/orgid',

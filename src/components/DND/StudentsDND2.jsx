@@ -6,10 +6,16 @@ import { CSS } from "@dnd-kit/utilities"
 import StudentAllWidget from "../Widget/StudentAllWidget"
 import { FiPlus, FiSave } from "react-icons/fi"
 import StudentAddWidget from "../Widget/LeftSideEmptyWidget"
+import { v4 as uuidv4 } from 'uuid';
+import LeftSideEmptyWidget from "../Widget/LeftSideEmptyWidget"
 const StudentsDND = () => {
+  const [index, setIndex] = useState([])
   const { tosifySuccess, tosifyError } = useAuthContext()
   const [students, setStudents] = useState([]);
-  const [index, setIndex] = useState([])
+  const maxValue = Math.max(...students.map(obj => obj.id));
+  const id = students.length ? maxValue + 1 : 1
+  const [leftWidgets, setLeftWidgets] = useState([{ id: id, name: '', department: '', is_minimized: false, position: index + 1, student_id: id }]);
+
   useEffect(() => {
     const studentData = async () => {
       try {
@@ -76,8 +82,8 @@ const StudentsDND = () => {
   }
 
   const addWidget = () => {
-    const maxValue = Math.max(...students.map(obj => obj.id));
-    const id = students.length ? maxValue + 1 : 1
+
+
 
     const newWidget = { id: id, name: '', department: '', is_minimized: false, position: index + 1, student_id: id };
     setStudents([...students, newWidget]);
@@ -86,16 +92,21 @@ const StudentsDND = () => {
   // ----------------Drag And Drop Start
   const handleDragEnd = (event) => {
     const { active, over } = event;
-    console.log(active.id, 'active id')
-    console.log(over.id, 'over id')
-    console.log(event)
-    if (active.id !== over.id) {
-      setStudents((students) => {
-        const oldIndex = students.findIndex((student) => student.id === active.id);
-        const newIndex = students.findIndex((student) => student.id === over.id);
+    if (!over) return;
 
-        return arrayMove(students, oldIndex, newIndex);
-      });
+    if (leftWidgets.find(widget => widget.id === active.id) && !students.find(widget => widget.id === active.id)) {
+      // Remove the dragged widget from the left side
+      setLeftWidgets(leftWidgets.filter(widget => widget.id !== active.id));
+      // Add the empty widget to the left side
+      setLeftWidgets(prevState => ([...prevState, { id: id, name: '', department: '', is_minimized: false, position: index + 1, student_id: id }]));
+      // Move the dragged widget to the right side
+      setStudents(prevState => [{ id: id, name: '', department: '', is_minimized: false, position: index + 1, student_id: id }, ...prevState]);
+    } else if (students.find(widget => widget.id === active.id) && !leftWidgets.find(widget => widget.id === active.id)) {
+      // Reorder the widgets within the right side
+      const newIndex = students.findIndex(widget => widget.id === over.id);
+      if (newIndex !== students.length - 1) { // Prevent dropping at the bottom
+        setStudents(arrayMove(students, students.findIndex(widget => widget.id === active.id), newIndex));
+      }
     }
   };
 
@@ -110,7 +121,7 @@ const StudentsDND = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex gap-3 w-[20%]  sticky top-20">
+      <div className="flex gap-3  flex-row-reverse sticky top-20">
         <button onClick={handleSave} className="p-3 rounded-full bg-slate-500 hover:bg-green-500 shadow-md hover:shadow-red-400">
           <FiSave className="text-2xl " />
         </button>
@@ -118,39 +129,60 @@ const StudentsDND = () => {
           <FiPlus className="text-2xl " />
         </button>
       </div>
-      <div
-        className=" w-[70%] mx-auto"
-      >
-        <DndContext
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-          sensors={sensors}
-        >
-          <div className="gap-6 flex flex-col">
-            <SortableContext
-              items={students}
-              strategy={verticalListSortingStrategy}
-            >
-              {
-                students.map((student, index) => (
-
-                  <StudentAllWidget
-                    key={student.id}
-                    index={index}
-                    student={student}
-                    students={students}
-                    setStudents={setStudents}
-                    setIndex={setIndex}
-                    addWidget={addWidget}
-                    tosifyError={tosifyError}
-                  />
-                ))
-              }
-
-
+      <div className="flex gap-3">
+        <div className=" w-[40%] bg-gray-100 p-4 rounded-md">
+          <h2 className="text-xl mb-4">Left Side</h2>
+          <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={leftWidgets} strategy={verticalListSortingStrategy}>
+              {leftWidgets.map(student => (
+                <LeftSideEmptyWidget
+                  key={student.id}
+                  index={index}
+                  student={student}
+                  students={students}
+                  setStudents={setStudents}
+                  setIndex={setIndex}
+                  addWidget={addWidget}
+                  tosifyError={tosifyError}
+                />
+              ))}
             </SortableContext>
-          </div>
-        </DndContext>
+          </DndContext>
+        </div>
+        <div
+          className=" w-[60%] mx-auto"
+        >
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            sensors={sensors}
+          >
+            <div className="gap-6 flex flex-col">
+              <SortableContext
+                items={students}
+                strategy={verticalListSortingStrategy}
+              >
+                {
+                  students.map((student, index) => (
+
+                    <StudentAllWidget
+                      key={student.id}
+                      index={index}
+                      student={student}
+                      students={students}
+                      setStudents={setStudents}
+                      setIndex={setIndex}
+                      addWidget={addWidget}
+                      tosifyError={tosifyError}
+                    />
+                  ))
+                }
+
+
+              </SortableContext>
+            </div>
+          </DndContext>
+        </div>
       </div>
 
     </div>

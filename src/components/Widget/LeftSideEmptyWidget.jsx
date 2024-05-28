@@ -15,7 +15,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-const StudentAllWidget = ({ student, index, setStudents, students, setIndex, addWidget, tosifyError, }) => {
+const LeftSideEmptyWidget = ({ student, index, setStudents, students, setIndex, addWidget, tosifyError, }) => {
+
   const { handleDelete } = useAuthContext()
 
   const { tosifySuccess } = useAuthContext()
@@ -106,13 +107,13 @@ const StudentAllWidget = ({ student, index, setStudents, students, setIndex, add
             <div className="flex flex-col items-center">
               <label htmlFor="">Student Name </label>
               <div className="  px-3 py-1 rounded">
-                <input className="px-2 rounded w-[60%]" type="text" value={student.name} onChange={e => onchangeInputWidget(student.id, 'name', e.target.value)} />
+                <input className="px-2 rounded  w-full" type="text" value={student.name} onChange={e => onchangeInputWidget(student.id, 'name', e.target.value)} />
               </div>
             </div>
-            <div className={`flex flex-col items-center ${student?.is_minimized ? 'hidden' : 'visible  duration-500'}`}>
+            <div className={`flex flex-col items-center ${student.is_minimized ? 'hidden' : 'visible  duration-500'}`}>
               <label htmlFor="">Department Name </label>
               <div className="  px-3 py-1 rounded">
-                <input className="px-2 rounded w-[60%]" type="text" value={student.department} onChange={e => onchangeInputWidget(student.id, 'department', e.target.value)} />
+                <input className="px-2 rounded w-full" type="text" value={student.department} onChange={e => onchangeInputWidget(student.id, 'department', e.target.value)} />
               </div>
             </div>
           </div>
@@ -121,4 +122,4 @@ const StudentAllWidget = ({ student, index, setStudents, students, setIndex, add
     </div>
   )
 }
-export default StudentAllWidget
+export default LeftSideEmptyWidget
