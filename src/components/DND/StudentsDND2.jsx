@@ -20,10 +20,10 @@ const StudentsDND = () => {
     const studentData = async () => {
       try {
         let { data: students_data, error: students_error } = await supabase
-          .from('students')
+          .from('employees')
           .select('*')
         let { data: student_widget_attributes, error: student_widget_attributes_error } = await supabase
-          .from('student_widget_attributes')
+          .from('employee_widget_attributes')
           .select('*')
         // Merge data based on common 'id' field
         const mergedData = students_data.map(student => ({
@@ -66,12 +66,12 @@ const StudentsDND = () => {
 
       // Upsert users
       await supabase
-        .from('students')
+        .from('employees')
         .upsert(updateStudents, { onConflict: ['id'] });
 
       // Upsert departments
       await supabase
-        .from('student_widget_attributes')
+        .from('employee_widget_attributes')
         .upsert(updateStudentsAttributes, { onConflict: ['student_id'] });
 
       tosifySuccess('Successfully save data.')

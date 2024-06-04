@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import conf from "./conf";
-import { Children, createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Bounce, ToastContainer, toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,6 +20,7 @@ export const AuthContextProvider = ({ children }) => {
   const [data, setData] = useState([])
   const [allUserData, setAllUserData] = useState([])
   const [allEmployeesData, setAllEmployeesData] = useState([])
+  const [newEmployeesData, setNewEmployeesData] = useState([])
   const [allDepartmentData, setAllDepartmentData] = useState([])
   const [error, setError] = useState(null)
   const [session, setSession] = useState(null)
@@ -35,6 +36,17 @@ export const AuthContextProvider = ({ children }) => {
     draggable: true,
     progress: undefined,
     theme: "light",
+    transition: Bounce,
+  });
+  const tosifyWarm = (info) => toast.warn(info, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
     transition: Bounce,
   });
   const tosifyError = (info) => toast.error(info, {
@@ -89,7 +101,7 @@ export const AuthContextProvider = ({ children }) => {
         const { data, error } = await supabase
           .from('employees')
           .select('*')
-          .order('positions', { ascending: true })
+        // .order('position', { ascending: true })
         if (error) setError(error)
         if (data) setAllEmployeesData(data)
         setIsLoading(false)
@@ -101,6 +113,32 @@ export const AuthContextProvider = ({ children }) => {
     }
     allEmployeesData()
   }, [allEmployeesData])
+
+  //merge employee data
+  useEffect(() => {
+    const employeeData = async () => {
+      try {
+        let { data: employees_data } = await supabase.from('employees').select('*')
+        let { data: employee_widget_attributes } = await supabase.from('employee_widget_attributes').select('*')
+
+        // Merge data based on common 'id' field
+        const mergedData = employees_data.map(employee => ({
+          ...employee,
+          ...(employee_widget_attributes.find(attr => attr.employee_id === employee.employee_id) || {}),
+        }));
+
+        const sortedData = [...mergedData.sort((a, b) => a.position - b.position)];
+
+        setNewEmployeesData(sortedData);
+      } catch (error) {
+        console.log(error)
+      }
+
+    }
+    employeeData()
+  }, [newEmployeesData])
+  // console.log(allEmployeesData)
+
 
   useEffect(() => {
     const allDepartmentData = async () => {
@@ -202,13 +240,13 @@ export const AuthContextProvider = ({ children }) => {
       }
       if (info == 'students') {
         await supabase
-          .from('students')
+          .from('employees')
           .delete()
           .eq('id', id)
       }
       if (info == 'student_widget_attributes') {
         await supabase
-          .from('student_widget_attributes')
+          .from('employee_widget_attributes')
           .delete()
           .eq('student_id', id)
       }
@@ -322,7 +360,7 @@ export const AuthContextProvider = ({ children }) => {
     console.log(error)
   }
   const value = {
-    signIn, signUp, createUser, data, isLoading, error, session, updateUserData, handleDelete, inviteMagicLinkUser: inviteUserByEmail, confirmAccount, generateInvite, messageInfo, tosifySuccess, tosifyError, allUserData, allEmployeesData, addDataEmployeesTable, inviteViaMail, allDepartmentData, addDepartment, addEmployeesState
+    signIn, signUp, createUser, data, isLoading, error, session, updateUserData, handleDelete, inviteMagicLinkUser: inviteUserByEmail, confirmAccount, generateInvite, messageInfo, tosifySuccess, tosifyError, allUserData, allEmployeesData, addDataEmployeesTable, inviteViaMail, allDepartmentData, addDepartment, addEmployeesState, newEmployeesData, tosifyWarm
   }
   return (
     <AuthCreateContext.Provider value={value}>

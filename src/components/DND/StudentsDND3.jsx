@@ -1,87 +1,215 @@
-import React, { useState, useEffect } from 'react';
-import { DndContext, closestCenter } from '@dnd-kit/core';
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { supabase } from '@/Supabase/AuthContext';
-import { v4 as uuidv4 } from 'uuid';
-
-// Sortable Item component
-function SortableItem({ id, student, department }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="p-4 border rounded-md bg-white shadow mb-2">
-      <div>Student Name: {student}</div>
-      <div>Department: {department}</div>
-    </div>
-  );
-}
-
-export default function StudentsDND2() {
-  const [leftWidgets, setLeftWidgets] = useState([{ id: uuidv4(), student: '', department: '' }]);
+import { useEffect, useState } from "react"
+import { supabase, useAuthContext } from "@/Supabase/AuthContext"
+import { DndContext, KeyboardSensor, PointerSensor, TouchSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core"
+import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import StudentAllWidget from "../Widget/StudentAllWidget"
+import { FiPlus, FiSave } from "react-icons/fi"
+import StudentAddWidget from "../Widget/LeftSideEmptyWidget"
+import LeftSideEmptyWidget from "../Widget/LeftSideEmptyWidget"
+const StudentsDND3 = () => {
+  const { tosifySuccess, tosifyError } = useAuthContext()
   const [students, setStudents] = useState([]);
-
+  const [index, setIndex] = useState([])
+  const maxValue = Math.max(...students.map(obj => obj.id));
+  const id = students.length ? maxValue + 1 : 1
+  const [leftWidgets, setLeftWidgets] = useState([{ id: id, name: '', department: '', is_minimized: false, position: index + 1, student_id: id }]);
   useEffect(() => {
-    const fetchStudents = async () => {
-      const { data, error } = await supabase.from('students').select('*');
-      if (error) {
-        console.error('Error fetching students:', error);
-      } else {
-        setStudents(data);
+    const studentData = async () => {
+      try {
+        let { data: students_data, error: students_error } = await supabase
+          .from('students')
+          .select('*')
+        let { data: student_widget_attributes, error: student_widget_attributes_error } = await supabase
+          .from('student_widget_attributes')
+          .select('*')
+        // Merge data based on common 'id' field
+        const mergedData = students_data.map(student => ({
+          ...student,
+          ...(student_widget_attributes.find(attr => attr.student_id === student.id) || {}),
+        }));
+
+        const sortedData = [...mergedData.sort((a, b) => a.position - b.position)];
+        setStudents(sortedData);
+      } catch (error) {
+        console.log(error)
       }
-    };
-    fetchStudents();
-  }, []);
 
-  // Inside handleDragEnd function
+    }
+    studentData()
+  }, [])
 
+
+  const handleSave = async () => {
+
+    const emptyValueChecked = students.filter(student => student.name === '' || student.department === '')
+    console.log(emptyValueChecked)
+    if (emptyValueChecked.length > 0) return alert('Please fill all values.')
+    const updateStudents = students.map(student => (
+      {
+        id: student.id,
+        name: student.name,
+        department: student.department
+      }
+    ))
+    const updateStudentsAttributes = students.map((student, index) => (
+      {
+        student_id: student.student_id,
+        position: index,
+        is_minimized: student.is_minimized,
+      }
+    ))
+
+    try {
+
+      // Upsert users
+      await supabase
+        .from('students')
+        .upsert(updateStudents, { onConflict: ['id'] });
+
+      // Upsert departments
+      await supabase
+        .from('student_widget_attributes')
+        .upsert(updateStudentsAttributes, { onConflict: ['student_id'] });
+
+      tosifySuccess('Successfully save data.')
+    } catch (error) {
+      tosifyError('Error : ', error.message)
+    }
+
+  }
+
+  const addWidget = () => {
+    const maxValue = Math.max(...students.map(obj => obj.id));
+    const id = students.length ? maxValue + 1 : 1
+
+    const newWidget = { id: id, name: '', department: '', is_minimized: false, position: index + 1, student_id: id };
+    setStudents([...students, newWidget]);
+  };
+  // console.log(students)
+  // console.log(leftWidgets)
+
+  // ----------------Drag And Drop Start
   const handleDragEnd = (event) => {
     const { active, over } = event;
-    if (!over) return;
 
-    if (leftWidgets.find(widget => widget.id === active.id) && !students.find(widget => widget.id === active.id)) {
-      // Remove the dragged widget from the left side
-      setLeftWidgets(leftWidgets.filter(widget => widget.id !== active.id));
-      // Add the empty widget to the left side
-      setLeftWidgets(prevState => ([...prevState, { id: uuidv4(), student: '', department: '' }]));
-      // Move the dragged widget to the right side
-      setStudents(prevState => [{ id: active.id, student: '', department: '' }, ...prevState]);
-    } else if (students.find(widget => widget.id === active.id) && !leftWidgets.find(widget => widget.id === active.id)) {
-      // Reorder the widgets within the right side
-      const newIndex = students.findIndex(widget => widget.id === over.id);
-      if (newIndex !== students.length - 1) { // Prevent dropping at the bottom
-        setStudents(arrayMove(students, students.findIndex(widget => widget.id === active.id), newIndex));
+    // console.log(active.id, over.id)
+
+
+    if (active.id !== over.id) {
+
+
+    }
+
+    if (active.id !== over.id) {
+
+      const activeIndexInLeft = leftWidgets.findIndex(widget => widget.id === active.id);
+      const activeIndexInRight = students.findIndex(widget => widget.id === active.id);
+      const overIndexInLeft = leftWidgets.findIndex(widget => widget.id === over.id);
+      const overIndexInRight = students.findIndex(widget => widget.id === over.id);
+
+      // console.log(activeIndexInRight, overIndexInRight, activeIndexInLeft, overIndexInLeft)
+      if (activeIndexInRight === overIndexInRight || activeIndexInRight === -1) {
+        const filterIfEmptyWidget = students.filter(student => student.name === '' || student.department === '')
+        console.log(filterIfEmptyWidget)
+        if (filterIfEmptyWidget.length === 0) {
+          setStudents(prevState => [{ id: id, name: '', department: '', is_minimized: false, position: index + 1, student_id: id }, ...prevState]);
+        } else {
+          return tosifyError('Fields the widget first please')
+        }
       }
+      setStudents((students) => {
+        const oldIndex = students.findIndex((student) => student.id === active.id);
+        const newIndex = students.findIndex((student) => student.id === over.id);
+
+        return arrayMove(students, oldIndex, newIndex);
+      });
     }
   };
 
+  // ----------------Drag And Drop End
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates
+    })
+  )
 
   return (
-    <div className="flex gap-4 p-4">
-      <div className="w-1/2 bg-gray-100 p-4 rounded-md">
-        <h2 className="text-xl mb-4">Left Side</h2>
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={leftWidgets} strategy={verticalListSortingStrategy}>
-            {leftWidgets.map(widget => (
-              <SortableItem key={widget.id} id={widget.id} student={widget.student} department={widget.department} />
-            ))}
-          </SortableContext>
-        </DndContext>
+    <div className="flex  gap-3">
+
+
+      <div className="  mx-auto" >
+        <div className=" ">
+          <div className="flex gap-3  sticky top-20">
+            <button onClick={handleSave} className="p-3 rounded-full bg-slate-500 hover:bg-green-500 shadow-md hover:shadow-red-400">
+              <FiSave className="text-2xl " />
+            </button>
+            <button onClick={addWidget} className="p-3 rounded-full bg-slate-500 hover:bg-green-500 shadow-md hover:shadow-blue-400">
+              <FiPlus className="text-2xl " />
+            </button>
+          </div>
+        </div>
+        <div className="flex gap-4">
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            sensors={sensors}
+          >
+            <div className="gap-6 flex flex-col">
+              <SortableContext items={leftWidgets} strategy={verticalListSortingStrategy}>
+                {leftWidgets.map((student) => (
+                  <LeftSideEmptyWidget
+                    key={student.id}
+                    student={student}
+                    students={students}
+                    setStudents={setStudents}
+                    setIndex={setIndex}
+                    addWidget={addWidget}
+                    tosifyError={tosifyError}
+                  />
+                ))}
+              </SortableContext>
+            </div>
+          </DndContext>
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            sensors={sensors}
+          >
+            <div className="flex gap-5">
+
+              <div className="gap-6 flex flex-col">
+                <SortableContext
+                  items={students}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {
+                    students.map((student, index) => (
+
+                      <StudentAllWidget
+                        key={student.id}
+                        index={index}
+                        student={student}
+                        students={students}
+                        setStudents={setStudents}
+                        setIndex={setIndex}
+                        addWidget={addWidget}
+                        tosifyError={tosifyError}
+                      />
+                    ))
+                  }
+
+
+                </SortableContext>
+              </div>
+            </div>
+          </DndContext>
+        </div>
       </div>
-      <div className="w-1/2 bg-gray-100 p-4 rounded-md">
-        <h2 className="text-xl mb-4">Right Side</h2>
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={students} strategy={verticalListSortingStrategy}>
-            {students.map(widget => (
-              <SortableItem key={widget.id} id={widget.id} student={widget.student} department={widget.department} />
-            ))}
-          </SortableContext>
-        </DndContext>
-      </div>
+
     </div>
-  );
+  )
 }
+export default StudentsDND3

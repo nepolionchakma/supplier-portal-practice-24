@@ -26,10 +26,11 @@ import {
 import AddEmployee from "./AddEmployee"
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd"
 import Widget4 from "../Widget/Widget4"
+import EmptyWidgetDepartmentDND4 from "../Widget/EmptyWidgetDepartmentDND4"
 
 
 function DepartmentDND4() {
-  const { allDepartmentData, allEmployeesData, handleDelete, addDataEmployeesTable, tosifySuccess, addEmployeesState } = useAuthContext()
+  const { allDepartmentData, newEmployeesData, handleDelete, addDataEmployeesTable, tosifySuccess, addEmployeesState, tosifyError, tosifyWarm } = useAuthContext()
   const [department_id, setDepartment_id] = useState('')
   const [employee_id, setEmployee_id] = useState('')
   const [selectedDepartment_id, setSelectedDepartment_id] = useState('')
@@ -47,52 +48,57 @@ function DepartmentDND4() {
   const [empID, setEmpID] = useState(29)
   const [employeeData, setEmployeeData] = useState([])
   const [employees, setEmployees] = useState([]);
-  const [min_n_max, setMin_n_max] = useState([])
+  const [widget_state, setWidget_state] = useState([])
   const [dpIDEmployees, setDpIDEmployees] = useState([])
   const [isAddEmployeeShow, setIsAddEmployeeShow] = useState(false)
   const [useStateDefenceDence, setUseStateDefenceDence] = useState('')
   const [newEmployees, setNewEmployees] = useState([])
   const [positions, setPositions] = useState('')
-  const sortedEmployeesData = allEmployeesData.sort((a, b) => a.positions - b.positions)
-  useEffect(() => {
-    setNewEmployees(sortedEmployeesData)
-  }, [sortedEmployeesData])
-  // console.log(newEmployees)
+
+
+  const [index, setIndex] = useState([])
+  const maxValue = Math.max(...newEmployeesData.map(obj => obj.employee_id));
+  const id = newEmployeesData.length ? maxValue + employees.length + 1 : 1
+  const [leftWidgets, setLeftWidgets] = useState([{ employee_id: id, employee_name: '', job_title: '', email: '', department_id: '', widget_state: true, position: index + 1, }]);
+
+
   // -------------------------------------START
 
 
   const handleSaveData = async () => {
-    const updates = employees.map((employee, index) => ({
-      employee_id: employee.employee_id,
-      employee_name: employee.employee_name,
-      job_title: employee.job_title,
-      email: employee.email,
-      department_id: employee.department_id,
-    }));
-    let position;
-    for (let i = 0; i <= employees.length; i++) {
-      position(i)
-    }
-    setPositions(position)
-    const updatesMin_n_max = min_n_max.map((employee, index) => ({
-      employee_id: employee.employee_id,
-      min_n_max: employee.min_n_max,
-      positions: index,
-    }));
-    tosifySuccess('Update Successfully.')
-    // employees Update
-    const { data, error } = await supabase
-      .from('employees')
-      .upsert(updates, { onConflict: ['employee_id'] });
-    if (error) {
-      console.error('Error updating employees:', error);
+    const filterIfEmptyWidget = employees.filter(employee => employee.employee_name === '' || employee.job_title === '' || employee.email === '' || employee.department_id === '')
+    if (filterIfEmptyWidget.length === 0) {
+      const updates = employees.map((employee, index) => ({
+        employee_id: employee.employee_id,
+        employee_name: employee.employee_name,
+        job_title: employee.job_title,
+        email: employee.email,
+        department_id: employee.department_id,
+      }));
+
+      const updatesWidget_state = widget_state.map((employee, index) => ({
+        employee_id: employee.employee_id,
+        widget_state: employee.widget_state,
+        position: index,
+      }));
+      tosifySuccess('Update Successfully.')
+      // employees Update
+      const { data, error } = await supabase
+        .from('employees')
+        .upsert(updates, { onConflict: ['employee_id'] });
+      if (error) {
+        console.error('Error updating employees:', error);
+      } else {
+        console.log('Employees updated:', data);
+      }
+      //employees state
+      await supabase
+        .from('employee_widget_attributes')
+        .upsert(updatesWidget_state, { onConflict: ['employee_id'] });
     } else {
-      console.log('Employees updated:', data);
+      tosifyWarm('Fields the widget first please')
     }
-    //employees state
-    // await supabase
-    //   .from('employees_state')
-    //   .upsert(updatesMin_n_max, { onConflict: ['employee_id'] });
+
   };
 
   // --------------------------END
@@ -104,9 +110,17 @@ function DepartmentDND4() {
     console.log(department_id, department_name)
   }
 
+
   const handleDeleteEmployee = (id, info) => {
-    handleDelete(id, info)
-    setUseStateDefenceDence(id)
+    const deleteFilter = newEmployeesData.filter(e => e.employee_id === id)
+    const deleteNewEmployee = employees.filter(e => e.employee_id !== id)
+    if (deleteFilter === id) {
+      handleDelete(id, info)
+      setUseStateDefenceDence(id)
+    } else {
+      setEmployees(deleteNewEmployee)
+    }
+
     tosifySuccess(' Successfully Deleted.')
   }
   const handleSave = () => {
@@ -151,10 +165,36 @@ function DepartmentDND4() {
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
-    console.log(active.id, 'active id')
-    console.log(over.id, 'over id')
+    // console.log(active.id, 'active id')
+    // console.log(over.id, 'over id')
+
+    // const filterIfEmptyWidget = employees.filter(employee => employee.employee_name === '' || employee.job_title === '' || employee.email === '' || employee.department_id === '')
+
+    // if (filterIfEmptyWidget.length === 0) {
+    //   setEmployees(prevState => [{ employee_id: id, employee_name: '', job_title: '', email: '', department_id: '', widget_state: false, position: index + 1, }, ...prevState]);
+    // } else {
+    //   tosifyWarm('Fields the widget first please')
+    // }
+
+
+    // const activeIndexInLeft = leftWidgets.findIndex(widget => widget.employee_id === active.id);
+    // const activeIndexInRight = employees.findIndex(widget => widget.employee_id === active.id.employee_id);
+    // const overIndexInLeft = leftWidgets.findIndex(widget => widget.employee_id === over.id);
+    // const overIndexInRight = employees.findIndex(widget => widget.employee_id === over.id.employee_id);
+
+    // console.log(activeIndexInRight, overIndexInRight)
+    // if (activeIndexInRight === overIndexInRight) {
+    //   const filterIfEmptyWidget = employees.filter(employee => employee.employee_name === '' || employee.job_title === '' || employee.email === '' || employee.department_id === '')
+    //   console.log(filterIfEmptyWidget)
+    //   if (filterIfEmptyWidget.length === 0) {
+    //     setEmployees(prevState => [{ employee_id: id, employee_name: '', job_title: '', email: '', department_id: '', widget_state: false, position: index + 1, }, ...prevState]);
+    //   } else {
+    //     return tosifyError('Fields the widget first please')
+    //   }
+    // }
 
     if (active.id !== over.id) {
+      console.log(active.id, over.id)
       setEmployees((employees) => {
         const oldIndex = employees.findIndex((employee) => employee.employee_id === active.id.employee_id);
         const newIndex = employees.findIndex((employee) => employee.employee_id === over.id.employee_id);
@@ -172,9 +212,8 @@ function DepartmentDND4() {
       coordinateGetter: sortableKeyboardCoordinates
     })
   )
-
   useEffect(() => {
-    const filterSingleDepartmentEmployees = newEmployees.filter((item) => item.department_id === selectDepartmentID)
+    const filterSingleDepartmentEmployees = newEmployeesData?.filter((item) => item.department_id === selectDepartmentID)
     setEmployees(filterSingleDepartmentEmployees)
   }, [selectDepartmentID, useStateDefenceDence, employee_id, employee_name, first_name, last_name, job_title, email, department_id])
   useEffect(() => {
@@ -189,7 +228,7 @@ function DepartmentDND4() {
   return (
     <div>
 
-      <div className="flex gap-5 w-full p-4">
+      <div className="flex p-4 m-0">
         <div className="w-[30%]  p-3 rounded">
           {/* left Side  */}
           <div className="flex flex-col gap-4 ">
@@ -201,6 +240,28 @@ function DepartmentDND4() {
                   key={i.department_id}>{i.department_name}</div>
               ), [])
             }
+          </div>
+          <div className="  bg-gray-100 p-4 rounded-md">
+            <h2 className="text-xl mb-4">Add Empty Widget</h2>
+            <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={leftWidgets} strategy={verticalListSortingStrategy}>
+                {leftWidgets.map(employee => (
+                  <EmptyWidgetDepartmentDND4
+                    key={employee.employee_id}
+                    index={index}
+                    employee={employee}
+                    setEmployees={setEmployees}
+                    employees={employees}
+                    widget_state={widget_state}
+                    setWidget_state={setWidget_state}
+                    handleDeleteEmployee={handleDeleteEmployee}
+                    minimize={minimize}
+                    handleMaximize={handleMaximize}
+                    handleMinimize={handleMinimize}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
           </div>
         </div>
 
@@ -251,6 +312,7 @@ function DepartmentDND4() {
               ), [])
             }
           </div>
+
           {/* <hr className="border-3 border-slate-700 " /> */}
           <div className=" overflow-hidden z-11 bg-slate-200">
             {/* ------------------------------------------ */}
@@ -261,7 +323,7 @@ function DepartmentDND4() {
             <hr className="border-3 border-slate-700 " />
           </div>
           {
-            selectDepartmentID && <div className="m-4 flex flex-row-reverse items-center gap-2">
+            employees.length > 0 && <div className="m-4 flex flex-row-reverse items-center gap-2">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger onClick={handleSaveData} className='p-3 bg-white shadow-lg  hover:bg-green-600 duration-300 hover:text-white text-green-600 rounded-full'>
@@ -331,12 +393,13 @@ function DepartmentDND4() {
 
                         <Widget4
                           key={employee.employee_id}
+                          id={employee.employee_id}
                           index={index}
                           employee={employee}
                           setEmployees={setEmployees}
                           employees={employees}
-                          min_n_max={min_n_max}
-                          setMin_n_max={setMin_n_max}
+                          widget_state={widget_state}
+                          setWidget_state={setWidget_state}
                           handleDeleteEmployee={handleDeleteEmployee}
                           minimize={minimize}
                           handleMaximize={handleMaximize}

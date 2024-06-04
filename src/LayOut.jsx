@@ -34,6 +34,8 @@ import DepartmentDND3 from "./components/DND/DepartmentDND3"
 import StudentsDND from "./components/DND/StudentsDND"
 import DepartmentDND4 from "./components/DND/DepartmentDND4"
 import StudentsDND2 from "./components/DND/StudentsDND2"
+import StudentsDND3 from "./components/DND/StudentsDND3"
+import DepartmentAPITest from "./components/DND/DepartmentAPITest"
 
 function LayOut() {
   const router = createBrowserRouter([
@@ -128,12 +130,20 @@ function LayOut() {
           element: <DepartmentDND4 />
         },
         {
+          path: '/departmentapitest',
+          element: <DepartmentAPITest />
+        },
+        {
           path: '/students',
           element: <StudentsDND />
         },
         {
           path: '/students2',
           element: <StudentsDND2 />
+        },
+        {
+          path: '/students3',
+          element: <StudentsDND3 />
         },
         {
           path: '/orgid',

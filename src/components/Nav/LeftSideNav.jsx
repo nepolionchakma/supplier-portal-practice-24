@@ -132,6 +132,12 @@ function LeftSideNav() {
           icon: <FiFeather className='text-2xl' />,
           link: '/students'
         },
+        {
+          id: 7,
+          name: 'departmentapitest',
+          icon: <FiCode className='text-2xl' />,
+          link: '/departmentapitest'
+        },
       ]
     },
     // {

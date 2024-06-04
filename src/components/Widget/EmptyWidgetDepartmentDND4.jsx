@@ -1,5 +1,7 @@
 
-import { FiEdit, FiMaximize, FiMinimize2, FiMove, FiSave, FiTrash, FiX } from "react-icons/fi"
+import { useLocalApi } from "@/Supabase/localApiContext";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,20 +13,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { useAuthContext } from "@/Supabase/AuthContext";
+import { FiMaximize, FiMinimize2, FiTrash } from "react-icons/fi"
 
-function Widget4(
-  { employee, id, index, setEmployees, employees, handleDeleteEmployee, widget_state, setWidget_state }) {
-  const { allDepartmentData } = useAuthContext()
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id: employee });
+const EmptyWidgetDepartmentDND4 = ({ employee, employees, setEmployees, index, setWidget_state }) => {
+  const { departmentData } = useLocalApi()
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: employee });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -42,22 +35,6 @@ function Widget4(
     updatedWidget_state[index].widget_state = !updatedWidget_state[index].widget_state;
     setWidget_state(updatedWidget_state);
   }
-  // const handleToggle = async (index) => {
-  //   const updatedEmployees = [...employees];
-  //   updatedEmployees[index].widget_state = !updatedEmployees[index].widget_state;
-  //   setEmployees(updatedEmployees);
-
-  //   const { data, error } = await supabase
-  //     .from('employees')
-  //     .update({ widget_state: updatedEmployees[index].widget_state })
-  //     .eq('employee_id', updatedEmployees[index].employee_id);
-
-  //   if (error) {
-  //     console.error('Error updating widget_state:', error);
-  //   } else {
-  //     console.log('widget_state updated:', data);
-  //   }
-  // };
 
   return (
     <div
@@ -97,23 +74,44 @@ function Widget4(
 
         </div>
 
-        <div className=" flex flex-col gap-3">
+        <div className=" flex flex-col gap-5">
           <div className=" ">
             <div className="flex gap-3">
-              <label htmlFor="">User Name </label>
-              <div className="  px-3 py-1 rounded">
-                <input className="px-2 rounded" type="text" value={employee.employee_name}
-                  onChange={e => handleChange(index, 'employee_name', e.target.value)} />
+              <div className={`  ${employee.widget_state ? 'visible justify-center flex items-center gap-2' : 'hidden'}  `}>
+                <label htmlFor="">User Name</label>
+                <input className="px-2 rounded w-[50%]" type="text" value={employee.user_name}
+                  onChange={e => handleChange(index, 'user_name', e.target.value)} />
               </div>
+
+              <div className={`  ${employee.widget_state ? 'hidden' : 'visible  '} flex items-center gap-2 `}>
+                <div className="flex flex-col  ">
+                  <label htmlFor="">User Name </label>
+                  <div className="  py-1 rounded">
+                    <input className="px-2 rounded  " type="text" value={employee.user_name}
+                      onChange={e => handleChange(index, 'user_name', e.target.value)} />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="">First Name </label>
+                  <div className=" py-1 rounded  ">
+                    <input className="px-2 rounded" type="text" value={employee.first_name}
+                      onChange={e => handleChange(index, 'first_name', e.target.value)} />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="">Last Name </label>
+                  <div className=" py-1 rounded  ">
+                    <input className="px-2 rounded" type="text" value={employee.last_name}
+                      onChange={e => handleChange(index, 'last_name', e.target.value)} />
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
           <div className={`  ${employee.widget_state ? 'hidden' : 'visible'}`}>
             <div className="flex gap-5">
-              <div className="flex flex-col gap-3 w-[15%]">
-                <label htmlFor="">Employee Id</label>
-                <input readOnly className="px-2 rounded" type="text" value={employee.employee_id}
-                  onChange={e => handleChange(index, 'employee_id', e.target.value)} />
-              </div>
+
               <div className="flex flex-col gap-3 w-[25%]">
                 <label htmlFor="">Job Title</label>
                 <input className="px-2 rounded" type="text" value={employee.job_title}
@@ -124,19 +122,19 @@ function Widget4(
                 <input className="px-2 rounded" type="email" value={employee.email}
                   onChange={e => handleChange(index, 'email', e.target.value)} />
               </div>
-              <div className="flex flex-col gap-3 w-[20%]">
+              <div className="flex flex-col gap-3 w-[40%]">
                 <label htmlFor="department_id">Department</label>
                 <div className="flex justify-between items-center  ">
                   <select
                     value={employee.department_id}
                     onChange={(e) => handleChange(index, 'department_id', e.target.value)}
-                    className=" w-[90%] rounded m-0"
+                    className=" w-full rounded m-0"
                     name="department_id" id="department_id" form="department_id" >
-
+                    <option value="">Select DP</option>
                     {
-                      allDepartmentData.map(d => (
+                      departmentData.map(d => (
 
-                        <option key={d.department_id} value={d.department_id} >{d.department_name}</option>
+                        <option defaultValue={d.department_id} key={d.department_id} value={d.department_id} >{d.department_name}</option>
                       ))
                     }
                   </select>
@@ -150,4 +148,4 @@ function Widget4(
     </div>
   )
 }
-export default Widget4
+export default EmptyWidgetDepartmentDND4;
