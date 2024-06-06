@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom"
-import { FiAlertCircle, FiBell, FiChevronDown, FiCreditCard, FiGithub, FiHome, FiList, FiMessageSquare } from "react-icons/fi";
+import { FiAlertCircle, FiBell, FiChevronDown, FiCreditCard, FiGithub, FiHome, FiList, FiMessageCircle, FiMessageSquare } from "react-icons/fi";
 import { AuthContextProvider, supabase, useAuthContext } from "@/Supabase/AuthContext";
 import LogIn from "../Profile/LogIn";
 
@@ -7,7 +7,7 @@ import Logo from '../../../images/Supplier-Portal.jpg'
 import { useState } from "react";
 function TopNav() {
   const { session } = useAuthContext()
-  const [activeId, setActiveId] = useState('')
+  const [activeId, setActiveId] = useState(0)
   const menus = [
     { name: 'Home', path: '/', icon: <FiHome />, dis: 'translate-x-0' },
     {

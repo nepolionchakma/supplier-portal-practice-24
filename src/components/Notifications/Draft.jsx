@@ -26,7 +26,7 @@ const inbox = [
 function Draft() {
   return (
     <div className="border">
-      <h2 className="font-bold ml-9 mt-8">Draft</h2>
+      {/* <h2 className="font-bold ml-9 mt-8">Draft</h2> */}
       <Table className='border-0 m-5 w-[95%]'>
         <TableCaption> </TableCaption>
         <TableHeader>

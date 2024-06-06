@@ -36,6 +36,7 @@ import DepartmentDND4 from "./components/DND/DepartmentDND4"
 import StudentsDND2 from "./components/DND/StudentsDND2"
 import StudentsDND3 from "./components/DND/StudentsDND3"
 import DepartmentAPITest from "./components/DND/DepartmentAPITest"
+import Chat from "./Chat/Chat"
 
 function LayOut() {
   const router = createBrowserRouter([
@@ -165,6 +166,10 @@ function LayOut() {
         {
           path: '/login',
           element: <LogIn />
+        },
+        {
+          path: '/chat',
+          element: <Chat />
         },
         {
           path: '/notifications',

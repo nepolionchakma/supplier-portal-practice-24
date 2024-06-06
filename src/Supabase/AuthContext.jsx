@@ -25,6 +25,7 @@ export const AuthContextProvider = ({ children }) => {
   const [error, setError] = useState(null)
   const [session, setSession] = useState(null)
   const [messageInfo, setMessageInfo] = useState('')
+  const [messageData, setMessageData] = useState([])
 
   // tosify
   const tosifySuccess = (info) => toast.success(info, {
@@ -138,6 +139,21 @@ export const AuthContextProvider = ({ children }) => {
     employeeData()
   }, [newEmployeesData])
   // console.log(allEmployeesData)
+  //messages
+  useEffect(() => {
+    const allMessages = async () => {
+      try {
+        let { data: messages, error } = await supabase
+          .from('messages')
+          .select('*')
+        const myMessage = messages.filter(my => my.receiver_id === session?.user.id)
+        setMessageData(myMessage)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    allMessages()
+  }, [messageData])
 
 
   useEffect(() => {
@@ -360,7 +376,7 @@ export const AuthContextProvider = ({ children }) => {
     console.log(error)
   }
   const value = {
-    signIn, signUp, createUser, data, isLoading, error, session, updateUserData, handleDelete, inviteMagicLinkUser: inviteUserByEmail, confirmAccount, generateInvite, messageInfo, tosifySuccess, tosifyError, allUserData, allEmployeesData, addDataEmployeesTable, inviteViaMail, allDepartmentData, addDepartment, addEmployeesState, newEmployeesData, tosifyWarm
+    signIn, signUp, createUser, data, isLoading, error, session, updateUserData, handleDelete, inviteMagicLinkUser: inviteUserByEmail, confirmAccount, generateInvite, messageInfo, tosifySuccess, tosifyError, allUserData, allEmployeesData, addDataEmployeesTable, inviteViaMail, allDepartmentData, addDepartment, addEmployeesState, newEmployeesData, tosifyWarm, messageData
   }
   return (
     <AuthCreateContext.Provider value={value}>

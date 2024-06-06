@@ -23,7 +23,7 @@ function Profile() {
           <h5>Jobtitle:{session?.user.user_metadata.job_title}</h5>
           <br />
           <Link className="bg-green-500 px-4 py-2 rounded text-white my-4" to={'/profile/update/' + session?.user.id}>Update Profile</Link>
-
+          {console.log(session)}
         </div>
         <div className="border p-3 rounded w-32 h-44 mt-8">
           <div className=""  >

@@ -4,13 +4,16 @@ import App from './App.jsx'
 import './index.css'
 import { AuthContextProvider } from './Supabase/AuthContext.jsx'
 import { LocalContextProvider } from './Supabase/localApiContext.jsx'
+import { SocketProvider } from './Chat/SocketContext.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <>
     <AuthContextProvider>
       <LocalContextProvider>
-        <App />
+        <SocketProvider>
+          <App />
+        </SocketProvider>
       </LocalContextProvider>
     </AuthContextProvider>
-  </React.StrictMode>,
+  </>,
 )
