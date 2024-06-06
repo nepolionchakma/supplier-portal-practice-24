@@ -211,7 +211,6 @@ const DepartmentAPITest = () => {
         });
 
         if (employeesResponse.ok && widgetStateResponse.ok) {
-
           tosifySuccess(' Successfully Save.')
         }
 
@@ -224,8 +223,6 @@ const DepartmentAPITest = () => {
     }
 
   };
-
-
 
   // Merge arrays on component mount
   useEffect(() => {
@@ -290,6 +287,7 @@ const DepartmentAPITest = () => {
       const activeIndexInRight = employees.findIndex(widget => widget.employee_id === active.id.employee_id);
       const overIndexInLeft = leftEmptyWidget.findIndex(widget => widget.employee_id === over.id.employee_id);
       const overIndexInRight = employees.findIndex(widget => widget.employee_id === over.id.employee_id);
+
       setEmployees((employees) => {
         return arrayMove(employees, activeIndexInRight, overIndexInRight)
       })
@@ -297,6 +295,7 @@ const DepartmentAPITest = () => {
       if (activeIndexInLeft !== -1) {
         const newLeftWidgets = [...leftEmptyWidget];
         const movedItem = newLeftWidgets.splice(activeIndexInLeft, 1)[0];
+        movedItem.widget_state = false;
 
         if (overIndexInRight !== -1) {
           const newRightWidgets = [...employees];
