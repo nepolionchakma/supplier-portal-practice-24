@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 function Profile() {
   const consfValue = String(conf.supabase_url + '&' + conf.supabase_key)
   const consfValueSlice = consfValue.slice(0, 10)
-  const { session } = useAuthContext()
+  const { session, fakeUser } = useAuthContext()
   // console.log(session)
 
   return (
@@ -17,13 +17,13 @@ function Profile() {
 
       <div className="flex gap-4">
         <div className="border p-4 m-8">
-          <h5>Name:{session?.user.user_metadata.first_name} {session?.user.user_metadata.last_name}</h5>
-          <h5>Email:{session?.user.user_metadata.email}</h5>
+          <h5>Name:{session?.user.user_metadata.first_name || fakeUser[0].user_name} {session?.user.user_metadata.last_name}</h5>
+          <h5>Email:{session?.user.user_metadata.email || fakeUser[0].email}</h5>
           <h5>UserName:{session?.user.user_metadata.user_name}</h5>
           <h5>Jobtitle:{session?.user.user_metadata.job_title}</h5>
           <br />
           <Link className="bg-green-500 px-4 py-2 rounded text-white my-4" to={'/profile/update/' + session?.user.id}>Update Profile</Link>
-          {console.log(session)}
+
         </div>
         <div className="border p-3 rounded w-32 h-44 mt-8">
           <div className=""  >

@@ -256,7 +256,7 @@ const DepartmentAPITest = () => {
     }
   }, [employeesData, employeesWidgetState, departmentData]);
 
-
+  console.log(employeesData, employeesWidgetState, departmentData)
 
   // useEffect(() => {
   //   const id = employeesData.length ? Math.max(...employees.map(obj => obj.employee_id)) + 1 : 1

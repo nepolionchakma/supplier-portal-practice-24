@@ -5,14 +5,15 @@ import LogIn from "./Profile/LogIn"
 import { ToastContainer } from "react-toastify"
 
 function RootHome() {
-  const { session, isLoading } = useAuthContext()
+  const { session, isLoading, fakeUser } = useAuthContext()
   if (isLoading) return (
     <div
       className='flex items-center justify-center'>
       <img src="https://hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif" alt="" />
     </div>
   )
-  if (session) return (
+
+  if (fakeUser[0]?.isLogin === true) return (
     <div >
       <TopNav />
       <LeftSideNav />

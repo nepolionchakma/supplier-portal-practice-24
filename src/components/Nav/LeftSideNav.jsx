@@ -157,15 +157,12 @@ function LeftSideNav() {
 
 
             <main
-              className='mx-auto rounded w-20 m-4 flex justify-center cursor-pointer'
-              onClick={() => setCollapsed(!collapsed)}
+              className='m-4 flex justify-center cursor-pointer'
             >
-              <div className='border p-2'>
-                <button>
-                  {
-                    collapsed ? <FiMenu /> : <FiX />
-                  }
-                </button>
+              <div className='border rounded p-2' onClick={() => setCollapsed(!collapsed)}>
+                {
+                  collapsed ? <FiMenu /> : <FiX />
+                }
               </div>
             </main>
 
@@ -288,8 +285,8 @@ function LeftSideNav() {
           </Sidebar>
 
         </div>
-        <div className={'  ' + (!collapsed ? 'w-[81%]' : 'w-[99%]')}>
-          <Outlet />
+        <div className={'  ' + (!collapsed ? 'w-full' : 'w-full')}>
+          <Outlet context={[collapsed]} />
         </div>
       </nav>
     </div>

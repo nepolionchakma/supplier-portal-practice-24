@@ -11,6 +11,7 @@ export const LocalContextProvider = ({ children }) => {
   const [employeesData, setEmployeesData] = useState([])
   const [employeesWidgetState, setEmployeesWidgetState] = useState([])
   const [departmentData, setDepartmentData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   // tosify
   const tosifySuccess = (info) => toast.success(info, {
@@ -88,7 +89,7 @@ export const LocalContextProvider = ({ children }) => {
     ...(employeesWidgetState.find(emp => emp.employee_id === e.employee_id))
   }))
 
-  console.log(mergeEmployeeData)
+
   const handleEmployeeDelete = async (id, info) => {
 
     if (info === 'employees') {
@@ -103,6 +104,32 @@ export const LocalContextProvider = ({ children }) => {
       }
     }
   }
+  const handleMessageDelete = async (id, info) => {
+    if (info == "draft") {
+      await fetch(`http://127.0.0.1:3000/messages/delete/${id}`, {
+        method: 'DELETE'
+      })
+    } else {
+      const resEmployee = await fetch(`http://127.0.0.1:3000/messages/delete/${id}`, {
+        method: 'DELETE'
+      })
+
+      if (resEmployee.ok) {
+        tosifySuccess('successfully message deleted')
+      }
+    }
+
+  }
+  const [singleMessage, setSingleMessage] = useState([])
+  // get single message
+  const getSingleMessage = async (id) => {
+    setIsLoading(true)
+    const res = await fetch(`http://127.0.0.1:3000/messages/${id}`)
+    const data = await res.json()
+    setSingleMessage(data)
+    setIsLoading(false)
+  }
+
   //merge employee data
   // useEffect(() => {
   //   const employeeData = async () => {
@@ -127,7 +154,7 @@ export const LocalContextProvider = ({ children }) => {
   // }, [newEmployeesData])
 
   const value = {
-    employeesData, employeesWidgetState, departmentData, mergeEmployeeData, handleEmployeeDelete, tosifySuccess, tosifyWarm, tosifyError
+    employeesData, employeesWidgetState, departmentData, mergeEmployeeData, handleEmployeeDelete, tosifySuccess, tosifyWarm, tosifyError, handleMessageDelete, getSingleMessage, singleMessage, isLoading
   };
   return (
     <LoaclApiContext.Provider value={value}>

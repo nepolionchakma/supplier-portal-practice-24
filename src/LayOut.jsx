@@ -4,7 +4,7 @@ import HomePortal from "./components/HomePortal/HomePortal"
 import Notifications from "./components/Notifications/Notifications"
 import Inbox from "./components/Notifications/Inbox"
 import Draft from "./components/Notifications/Draft"
-import Send from "./components/Notifications/Send"
+import Send from "./components/Notifications/Sent"
 import Items from "./components/Items/Items"
 import Profile from "./components/Profile/Profile"
 import AllUsers from "./components/UserManagement/AllUsers"
@@ -37,6 +37,8 @@ import StudentsDND2 from "./components/DND/StudentsDND2"
 import StudentsDND3 from "./components/DND/StudentsDND3"
 import DepartmentAPITest from "./components/DND/DepartmentAPITest"
 import Chat from "./Chat/Chat"
+import Noti2 from "./components/Notifications/Noti2"
+import MessageDetails from "./components/Notifications/MessageDetails"
 
 function LayOut() {
   const router = createBrowserRouter([
@@ -73,6 +75,10 @@ function LayOut() {
         {
           path: '/bell',
           element: <Bell />
+        },
+        {
+          path: '/noti2',
+          element: <Noti2 />
         },
         {
           path: '/employees',
@@ -172,7 +178,7 @@ function LayOut() {
           element: <Chat />
         },
         {
-          path: '/notifications',
+          path: '/messages',
           element: <Notifications />,
           children: [
             {
@@ -190,9 +196,18 @@ function LayOut() {
             {
               path: 'draft',
               element: <Draft />
-            },
+            }
           ]
         },
+        {
+          path: "/messages/:id",
+          // loader: async ({ params }) => {
+          //   const res = await fetch(`http://127.0.0.1:3000/messages/${params.id}`)
+          //   const data = await res.json()
+          //   return data[0]
+          // },
+          element: < MessageDetails />,
+        }
       ]
     },
     {

@@ -26,6 +26,11 @@ export const AuthContextProvider = ({ children }) => {
   const [session, setSession] = useState(null)
   const [messageInfo, setMessageInfo] = useState('')
   const [messageData, setMessageData] = useState([])
+  const [myMessages, setMyMessages] = useState([])
+  const [sentMessageData, setSentMessageData] = useState([])
+  const [unReadMessages, setUnReadMessages] = useState([])
+  const [draftMessageData, setDraftMessageData] = useState([])
+  const [fakeUser, setFakeUser] = useState([])
 
   // tosify
   const tosifySuccess = (info) => toast.success(info, {
@@ -143,17 +148,26 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const allMessages = async () => {
       try {
-        let { data: messages, error } = await supabase
-          .from('messages')
-          .select('*')
-        const myMessage = messages.filter(my => my.receiver_id === session?.user.id)
-        setMessageData(myMessage)
+        const res = await fetch("http://127.0.0.1:3000/messages")
+        const data = await res.json()
+
+        const sentMessage = data.filter(user => user.status === "sent")
+        const draftMessage = data.filter(user => user.status === "draft")
+
+        const myMessages = sentMessage.filter(user => user.receiver_name === fakeUser[0]?.user_name)
+        const unReadMessageFilter = myMessages.filter(m => m.is_read_msg === 0)
+        setMessageData(data)
+        setUnReadMessages(unReadMessageFilter)
+        setMyMessages(myMessages)
+        setSentMessageData(sentMessage)
+        setDraftMessageData(draftMessage)
+
       } catch (error) {
         console.log(error)
       }
     }
     allMessages()
-  }, [messageData])
+  }, [messageData, sentMessageData, draftMessageData])
 
 
   useEffect(() => {
@@ -375,8 +389,13 @@ export const AuthContextProvider = ({ children }) => {
     console.log(data)
     console.log(error)
   }
+
+  const fakeUserMake = (email, name, isLogin) => {
+    setFakeUser(prev => [...prev, { email: email, user_name: name, isLogin: isLogin }])
+  }
+
   const value = {
-    signIn, signUp, createUser, data, isLoading, error, session, updateUserData, handleDelete, inviteMagicLinkUser: inviteUserByEmail, confirmAccount, generateInvite, messageInfo, tosifySuccess, tosifyError, allUserData, allEmployeesData, addDataEmployeesTable, inviteViaMail, allDepartmentData, addDepartment, addEmployeesState, newEmployeesData, tosifyWarm, messageData
+    signIn, signUp, createUser, data, isLoading, error, session, updateUserData, handleDelete, inviteMagicLinkUser: inviteUserByEmail, confirmAccount, generateInvite, messageInfo, tosifySuccess, tosifyError, allUserData, allEmployeesData, addDataEmployeesTable, inviteViaMail, allDepartmentData, addDepartment, addEmployeesState, newEmployeesData, tosifyWarm, messageData, fakeUserMake, fakeUser, sentMessageData, myMessages, unReadMessages, draftMessageData
   }
   return (
     <AuthCreateContext.Provider value={value}>
