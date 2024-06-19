@@ -13,7 +13,7 @@ function RootHome() {
     </div>
   )
 
-  if (fakeUser[0]?.isLogin === true) return (
+  if (session) return (
     <div >
       <TopNav />
       <LeftSideNav />

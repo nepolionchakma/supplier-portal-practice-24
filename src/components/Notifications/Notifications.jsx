@@ -382,8 +382,9 @@ function Notifications() {
                       ))}
 
                       <input
+                        autoFocus
                         type="text"
-                        className="flex-grow p-2 outline-none"
+                        className="flex-grow p-2 outline-none "
                         value={query}
                         placeholder='Search User'
                         onChange={handleInputChange}

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useSocket } from "@/Chat/SocketContext";
 function TopNav() {
 
-  const { session, fakeUser } = useAuthContext()
+  const { session } = useAuthContext()
   const socket = useSocket();
   const [activeId, setActiveId] = useState()
   const menus = [

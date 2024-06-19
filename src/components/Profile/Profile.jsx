@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 function Profile() {
   const consfValue = String(conf.supabase_url + '&' + conf.supabase_key)
   const consfValueSlice = consfValue.slice(0, 10)
-  const { session, fakeUser } = useAuthContext()
+  const { session } = useAuthContext()
   // console.log(session)
 
   return (
@@ -17,8 +17,8 @@ function Profile() {
 
       <div className="flex gap-4">
         <div className="border p-4 m-8">
-          <h5>Name:{session?.user.user_metadata.first_name || fakeUser[0].user_name} {session?.user.user_metadata.last_name}</h5>
-          <h5>Email:{session?.user.user_metadata.email || fakeUser[0].email}</h5>
+          <h5>Name:{session?.user.user_metadata.first_name} {session?.user.user_metadata.last_name}</h5>
+          <h5>Email:{session?.user.user_metadata.email}</h5>
           <h5>UserName:{session?.user.user_metadata.user_name}</h5>
           <h5>Jobtitle:{session?.user.user_metadata.job_title}</h5>
           <br />
